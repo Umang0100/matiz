@@ -1,1504 +1,2836 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Matiz — Curated Fine Art Atelier</title>
-<meta name="google-site-verification" content="41VUr3CPH3KqqqWzlFTDPZDTmDMyhCU_KSOsu8g6Cbg" />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Barlow+Condensed:wght@300;400;500;600;700&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --cream: #f5f0e8;
-    --ink: #14110e;
-    --rust: #c4622d;
-    --gold: #c5a059;
-    --gold-light: #e4caa0;
-    --sage: #6a7d60;
-    --dust: #d8cebe;
-    --charcoal: #211c18;
-    --card-bg: #efe8dc;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Matiz — Curated Fine Art Atelier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Barlow+Condensed:wght@300;400;500;600;700&family=Cinzel:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --cream: #f5f0e8;
+      --ink: #14110e;
+      --rust: #c4622d;
+      --rust-hover: #db6e33;
+      --gold: #c5a059;
+      --gold-light: #e4caa0;
+      --sage: #6a7d60;
+      --dust: #d8cebe;
+      --charcoal: #211c18;
+      --card-bg: #efe8dc;
+      --container-max: 1440px;
+      --nav-height: 80px;
+    }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--cream);
-    color: var(--ink);
-    font-family: 'Cormorant Garamond', serif;
-    overflow-x: hidden;
-    cursor: none;
-  }
-  a, button, input, select {
-    -webkit-tap-highlight-color: transparent;
-  }
-  a:focus-visible, button:focus-visible, input:focus-visible {
-    outline: 2px solid var(--rust);
-    outline-offset: 3px;
-  }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* Custom Cursor */
-  .cursor {
-    position: fixed;
-    width: 10px; height: 10px;
-    background: var(--rust);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: width 0.25s ease, height 0.25s ease, background-color 0.25s ease;
-    mix-blend-mode: difference;
-  }
-  .cursor-ring {
-    position: fixed;
-    width: 38px; height: 38px;
-    border: 1px solid var(--gold);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, opacity 0.25s ease;
-    opacity: 0.65;
-  }
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+      overflow-x: clip;
+    }
 
-  /* Grain Texture */
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.038'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 1000; opacity: 0.6;
-  }
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      overflow-x: clip;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-  /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 24px 56px;
-    background: rgba(245, 240, 232, 0.88);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid rgba(26,22,18,0.06);
-    transition: padding 0.3s ease;
-  }
-  .nav-logo {
-    font-family: 'Cinzel', serif;
-    font-size: 24px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--ink); text-decoration: none;
-    display: flex; align-items: baseline; gap: 8px;
-  }
-  .nav-logo span { color: var(--rust); font-style: italic; }
-  .nav-brand-tag {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.26em;
-    text-transform: uppercase;
-    color: rgba(26,22,18,0.55);
-    padding-left: 6px;
-    border-left: 1px solid var(--dust);
-  }
-  .nav-links { display: flex; gap: 42px; list-style: none; align-items: center; }
-  .nav-links a {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--ink); text-decoration: none; opacity: 0.7; transition: opacity 0.3s, color 0.3s;
-    position: relative;
-    padding: 4px 0;
-  }
-  .nav-links a::after {
-    content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px;
-    background: var(--rust); transition: width 0.3s ease;
-  }
-  .nav-links a:hover { opacity: 1; color: var(--rust); }
-  .nav-links a:hover::after { width: 100%; }
-  
-  .nav-cart {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
-    background: var(--ink); color: var(--cream); border: none;
-    padding: 11px 26px; cursor: pointer; transition: background 0.3s, transform 0.2s ease, box-shadow 0.3s ease;
-    border-radius: 999px;
-    display: inline-flex; align-items: center; gap: 8px;
-    box-shadow: 0 4px 16px rgba(20,17,14,0.14);
-  }
-  .nav-cart:hover { background: var(--rust); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(196,98,45,0.25); }
+    a,
+    button,
+    input,
+    select {
+      -webkit-tap-highlight-color: transparent;
+    }
 
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: grid; grid-template-columns: 1fr 1.05fr;
-    position: relative; overflow: hidden;
-    padding-top: 80px;
-  }
-  .hero-left {
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 60px 60px 80px; position: relative; z-index: 2;
-  }
-  .hero-kicker {
-    display: flex; align-items: center; gap: 14px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase;
-    color: var(--rust); margin-bottom: 22px;
-    opacity: 0; animation: fadeUp 1s 0.2s forwards;
-  }
-  .hero-kicker::before {
-    content: ''; width: 32px; height: 1px; background: var(--rust);
-  }
-  .hero-title {
-    font-size: clamp(64px, 7.2vw, 112px);
-    font-weight: 300; line-height: 0.94; letter-spacing: -0.025em;
-    margin-bottom: 30px;
-    opacity: 0; animation: fadeUp 1s 0.4s forwards;
-  }
-  .hero-title em { font-style: italic; color: var(--rust); font-family: 'Cormorant Garamond', serif; font-weight: 400; }
-  .hero-desc {
-    font-size: 18px; font-weight: 300; line-height: 1.8;
-    max-width: 440px; margin-bottom: 44px;
-    color: rgba(26,22,18,0.78);
-    opacity: 0; animation: fadeUp 1s 0.6s forwards;
-  }
-  .hero-cta {
-    display: flex; gap: 18px; align-items: center;
-    opacity: 0; animation: fadeUp 1s 0.8s forwards;
-  }
-  .btn-primary {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
-    background: var(--rust); color: var(--cream); border: none;
-    padding: 16px 36px; cursor: pointer; text-decoration: none;
-    display: inline-flex; align-items: center; justify-content: center;
-    transition: background 0.3s, transform 0.2s, box-shadow 0.3s ease;
-    border-radius: 999px;
-    box-shadow: 0 14px 28px rgba(196,98,45,0.22);
-  }
-  .btn-primary:hover { background: var(--ink); transform: translateY(-2px); box-shadow: 0 16px 32px rgba(20,17,14,0.22); }
-  .btn-ghost {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
-    background: transparent; color: var(--ink);
-    border: 1px solid rgba(26,22,18,0.25);
-    padding: 16px 36px; cursor: pointer; text-decoration: none;
-    display: inline-flex; align-items: center; justify-content: center;
-    transition: border-color 0.3s, transform 0.2s, background 0.3s ease, color 0.3s;
-    border-radius: 999px;
-  }
-  .btn-ghost:hover { border-color: var(--ink); transform: translateY(-2px); background: rgba(26,22,18,0.04); }
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 2px solid var(--rust);
+      outline-offset: 3px;
+    }
 
-  .hero-right {
-    position: relative;
-    display: flex; align-items: center; justify-content: center;
-    padding: 40px 60px;
-  }
-  .hero-showcase {
-    position: relative;
-    width: 100%; max-width: 480px;
-    aspect-ratio: 4/5;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 35px 80px rgba(20,17,14,0.25), 0 0 0 1px rgba(197,160,89,0.2);
-    opacity: 0; animation: scaleIn 1.2s 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
-  }
-  .hero-showcase-img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 1.2s cubic-bezier(0.16,1,0.3,1);
-  }
-  .hero-showcase:hover .hero-showcase-img {
-    transform: scale(1.05);
-  }
-  .hero-badge-float {
-    position: absolute; bottom: 24px; left: 24px; right: 24px;
-    background: rgba(20, 17, 14, 0.78);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    color: var(--cream);
-    padding: 18px 22px;
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.1);
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .hero-badge-title { font-size: 19px; font-weight: 400; margin-bottom: 2px; }
-  .hero-badge-sub {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--gold-light);
-  }
-  .hero-badge-price {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px; color: #fff; font-weight: 500;
-  }
+    /* Custom Cursor: ONLY on devices with hover & fine pointer (desktop PC) */
+    @media (hover: hover) and (pointer: fine) {
+      body {
+        cursor: none;
+      }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(28px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes scaleIn {
-    from { opacity: 0; transform: scale(0.92) translateY(30px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-  }
+      .cursor {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        background: var(--rust);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: width 0.25s ease, height 0.25s ease, background-color 0.25s ease;
+        mix-blend-mode: difference;
+      }
 
-  /* MARQUEE */
-  .marquee-band {
-    background: var(--ink); color: var(--cream);
-    padding: 18px 0; overflow: hidden; white-space: nowrap;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-  .marquee-inner {
-    display: inline-flex; gap: 0;
-    animation: marquee 24s linear infinite;
-  }
-  .marquee-item {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 0.26em; text-transform: uppercase;
-    padding: 0 38px; opacity: 0.75;
-  }
-  .marquee-dot { color: var(--gold); margin-right: 38px; }
-  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+      .cursor-ring {
+        position: fixed;
+        width: 38px;
+        height: 38px;
+        border: 1px solid var(--gold);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9998;
+        transform: translate(-50%, -50%);
+        transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, opacity 0.25s ease;
+        opacity: 0.65;
+      }
+    }
 
-  /* SECTION LABELS */
-  .section-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase;
-    color: var(--rust); margin-bottom: 16px;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .section-label::before { content: ''; width: 28px; height: 1px; background: var(--rust); }
+    @media (hover: none) or (pointer: coarse) {
+      body {
+        cursor: auto;
+      }
 
-  /* FEATURED SECTION */
-  .featured { padding: 130px 56px 100px; }
-  .featured-header {
-    display: flex; align-items: flex-end; justify-content: space-between;
-    margin-bottom: 68px;
-  }
-  .featured-title {
-    font-size: clamp(42px, 5.2vw, 72px);
-    font-weight: 300; line-height: 1.05; letter-spacing: -0.02em;
-  }
-  .featured-title em { font-style: italic; color: var(--rust); }
-  .curatorial-statement {
-    max-width: 480px;
-    font-size: 17px; font-weight: 300; line-height: 1.7;
-    color: rgba(26,22,18,0.72);
-  }
+      .cursor,
+      .cursor-ring {
+        display: none !important;
+      }
+    }
 
-  /* ART GRID */
-  .art-grid {
-    display: grid;
-    grid-template-columns: 1.35fr 1fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 28px;
-  }
-  .art-card {
-    position: relative;
-    cursor: pointer;
-    background: var(--card-bg);
-    border-radius: 18px;
-    padding: 16px 16px 20px;
-    box-shadow: 0 12px 36px rgba(26,22,18,0.06);
-    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease;
-    border: 1px solid rgba(26,22,18,0.05);
-  }
-  .art-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 24px 50px rgba(26,22,18,0.12);
-  }
-  .art-card:first-child {
-    grid-row: span 2;
-    display: flex; flex-direction: column;
-  }
-  .art-frame {
-    position: relative; overflow: hidden;
-    border-radius: 12px;
-    aspect-ratio: 4/5;
-    background: #181512;
-  }
-  .art-card:first-child .art-frame {
-    aspect-ratio: unset;
-    flex: 1;
-    min-height: 520px;
-  }
-  .art-img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
-  }
-  .art-card:hover .art-img { transform: scale(1.06); }
+    /* Grain Texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.038'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.6;
+    }
 
-  .art-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(20,17,14,0.85) 0%, rgba(20,17,14,0.1) 50%, transparent 100%);
-    opacity: 0; transition: opacity 0.35s ease;
-    display: flex; align-items: flex-end; justify-content: space-between;
-    padding: 24px;
-  }
-  .art-card:hover .art-overlay { opacity: 1; }
-  
-  .art-actions {
-    display: flex; gap: 10px; width: 100%;
-  }
-  .add-btn {
-    flex: 1;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--cream); background: var(--rust); border: none;
-    padding: 13px 18px; cursor: pointer;
-    border-radius: 999px;
-    box-shadow: 0 8px 20px rgba(196,98,45,0.3);
-    transition: background 0.25s, transform 0.2s;
-  }
-  .add-btn:hover { background: #e07238; transform: scale(1.02); }
-  .inspect-btn {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
-    background: rgba(255,255,255,0.22); color: #fff; border: 1px solid rgba(255,255,255,0.35);
-    padding: 13px 18px; cursor: pointer;
-    border-radius: 999px;
-    backdrop-filter: blur(8px);
-    transition: background 0.25s, color 0.25s;
-  }
-  .inspect-btn:hover { background: #fff; color: var(--ink); }
+    /* Container wrapper for PC ultrawide screens */
+    .section-container {
+      width: 100%;
+      max-width: var(--container-max);
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-  .art-info { padding: 18px 6px 4px; }
-  .art-name-row {
-    display: flex; justify-content: space-between; align-items: baseline;
-    margin-bottom: 6px;
-  }
-  .art-name { font-size: 22px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); }
-  .art-price { font-size: 19px; font-weight: 600; color: var(--rust); font-family: 'Cormorant Garamond', serif; }
-  .art-meta {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: rgba(26,22,18,0.6);
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .art-artist { color: var(--ink); font-weight: 500; }
+    /* ================= NAV ================= */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(245, 240, 232, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(26, 22, 18, 0.06);
+      transition: padding 0.3s ease, background 0.3s ease;
+    }
 
-  /* PHILOSOPHY & ABOUT */
-  .about { display: grid; grid-template-columns: 1fr 1fr; background: var(--charcoal); color: var(--cream); }
-  .about-left {
-    position: relative; overflow: hidden; min-height: 580px;
-    background-image: url("https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80");
-    background-size: cover;
-    background-position: center;
-  }
-  .about-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(20,17,14,0.85) 0%, rgba(20,17,14,0.72) 100%);
-    display: flex; align-items: center; justify-content: center;
-    padding: 64px;
-  }
-  .about-quote blockquote {
-    font-size: clamp(24px, 2.8vw, 36px);
-    font-weight: 300; font-style: italic;
-    color: var(--cream); line-height: 1.5;
-    text-align: center;
-  }
-  .about-quote cite {
-    display: block;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase;
-    color: var(--gold); font-style: normal; margin-top: 28px;
-  }
-  .about-right {
-    padding: 100px 76px;
-    display: flex; flex-direction: column; justify-content: center;
-  }
-  .about-h {
-    font-size: clamp(38px, 4.2vw, 58px);
-    font-weight: 300; line-height: 1.1; letter-spacing: -0.015em;
-    margin-bottom: 28px;
-  }
-  .about-h em { font-style: italic; color: var(--rust); }
-  .about-p {
-    font-size: 18px; font-weight: 300; line-height: 1.85;
-    color: rgba(245,240,232,0.75); margin-bottom: 20px;
-  }
-  .stats { display: flex; gap: 48px; padding-top: 48px; border-top: 1px solid rgba(255,255,255,0.12); margin-top: 24px; }
-  .stat-n { font-size: 48px; font-weight: 300; color: var(--gold); line-height: 1; display: block; font-family: 'Cinzel', serif; }
-  .stat-l {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
-    color: rgba(245,240,232,0.55); margin-top: 6px;
-  }
+    .nav-inner {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px clamp(16px, 4vw, 56px);
+      height: var(--nav-height);
+    }
 
-  /* COLLECTIONS */
-  .collections { padding: 130px 56px; background: #181411; color: var(--cream); }
-  .collections .section-label { color: var(--gold); }
-  .collections .section-label::before { background: var(--gold); }
-  .coll-title {
-    font-size: clamp(42px, 5.2vw, 70px);
-    font-weight: 300; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 64px;
-  }
-  .coll-title em { font-style: italic; color: var(--rust); }
-  .coll-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .coll-item {
-    position: relative; overflow: hidden;
-    border-radius: 18px;
-    aspect-ratio: 3/4;
-    cursor: pointer;
-    border: 1px solid rgba(255,255,255,0.08);
-    transition: transform 0.4s ease, border-color 0.4s ease;
-  }
-  .coll-item:hover {
-    transform: translateY(-6px);
-    border-color: var(--gold);
-  }
-  .coll-img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.9s cubic-bezier(0.16,1,0.3,1);
-  }
-  .coll-item:hover .coll-img { transform: scale(1.08); }
-  .coll-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(14,12,10,0.92) 0%, rgba(14,12,10,0.2) 60%, transparent 100%);
-    display: flex; flex-direction: column; justify-content: flex-end;
-    padding: 32px;
-  }
-  .coll-name { font-size: 28px; font-weight: 400; margin-bottom: 6px; color: #fff; }
-  .coll-sub {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--gold);
-  }
+    .nav-brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-  /* PROCESS */
-  .process {
-    padding: 130px 56px;
-    display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px;
-    background: var(--cream);
-  }
-  .process-sticky { position: sticky; top: 120px; align-self: start; }
-  .process-h {
-    font-size: clamp(42px, 5vw, 68px);
-    font-weight: 300; line-height: 1.05; letter-spacing: -0.02em;
-  }
-  .process-h em { font-style: italic; color: var(--rust); }
-  .steps { display: flex; flex-direction: column; gap: 42px; }
-  .step {
-    display: flex; gap: 32px;
-    padding-bottom: 38px;
-    border-bottom: 1px solid var(--dust);
-  }
-  .step-n {
-    font-family: 'Cinzel', serif;
-    font-size: 32px; font-weight: 400; color: var(--rust); line-height: 1;
-    min-width: 44px;
-  }
-  .step-t { font-size: 24px; font-weight: 400; margin-bottom: 10px; color: var(--ink); }
-  .step-d { font-size: 17px; font-weight: 300; line-height: 1.75; color: rgba(26,22,18,0.72); }
+    .nav-logo {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(20px, 3vw, 24px);
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      white-space: nowrap;
+    }
 
-  /* NEWSLETTER */
-  .newsletter {
-    padding: 100px 56px;
-    background: var(--charcoal); color: var(--cream);
-    display: grid; grid-template-columns: 1.1fr 1fr; gap: 60px; align-items: center;
-    border-top: 1px solid rgba(255,255,255,0.06);
-  }
-  .nl-title {
-    font-size: clamp(38px, 4.5vw, 62px);
-    font-weight: 300; line-height: 1.05;
-  }
-  .nl-title em { font-style: italic; color: var(--rust); }
-  .nl-sub {
-    font-size: 17px; font-weight: 300; color: rgba(245,240,232,0.7);
-    margin-top: 16px; line-height: 1.7; max-width: 440px;
-  }
-  .nl-form {
-    display: flex; flex-direction: column; gap: 14px;
-  }
-  .nl-input {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 999px;
-    padding: 16px 26px;
-    color: #fff; font-size: 16px; font-family: 'Cormorant Garamond', serif;
-    outline: none; transition: border-color 0.3s;
-  }
-  .nl-input:focus { border-color: var(--gold); }
-  .nl-btn {
-    background: var(--rust); color: var(--cream); border: none;
-    border-radius: 999px; padding: 16px 32px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
-    cursor: pointer; transition: background 0.3s, transform 0.2s;
-  }
-  .nl-btn:hover { background: #e07238; transform: translateY(-1px); }
-  .nl-fine { font-size: 12px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); margin-top: 4px; }
+    .nav-logo span {
+      color: var(--rust);
+      font-style: italic;
+    }
 
-  /* ARTWORK DETAIL MODAL (LIGHTBOX) */
-  .artwork-modal {
-    position: fixed; inset: 0;
-    background: rgba(14, 12, 10, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    display: flex; align-items: center; justify-content: center;
-    padding: 30px;
-    opacity: 0; visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    z-index: 1400;
-  }
-  .artwork-modal.open { opacity: 1; visibility: visible; }
-  .artwork-modal-box {
-    width: min(1040px, 96vw);
-    max-height: 90vh;
-    background: var(--cream);
-    border-radius: 24px;
-    overflow-y: auto;
-    display: grid; grid-template-columns: 1fr 1fr;
-    box-shadow: 0 40px 90px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.1);
-    position: relative;
-  }
-  .artwork-modal-close {
-    position: absolute; top: 20px; right: 20px;
-    width: 42px; height: 42px;
-    border-radius: 50%;
-    background: rgba(26,22,18,0.08);
-    border: none; cursor: pointer;
-    font-size: 24px; line-height: 1;
-    display: flex; align-items: center; justify-content: center;
-    z-index: 10;
-    transition: background 0.2s;
-  }
-  .artwork-modal-close:hover { background: rgba(26,22,18,0.2); }
-  .modal-art-image-wrap {
-    background: #14110e;
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-    min-height: 480px;
-  }
-  .modal-art-image-wrap img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-  }
-  .modal-art-details {
-    padding: 48px 40px;
-    display: flex; flex-direction: column; justify-content: space-between;
-  }
-  .modal-kicker {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
-    color: var(--rust); margin-bottom: 8px;
-  }
-  .modal-title { font-size: 36px; font-weight: 400; margin-bottom: 4px; }
-  .modal-artist {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 14px; letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 24px;
-  }
-  .modal-quote {
-    font-size: 17px; font-style: italic; line-height: 1.7;
-    color: rgba(26,22,18,0.78);
-    margin-bottom: 28px;
-    padding-left: 16px;
-    border-left: 2px solid var(--rust);
-  }
-  .modal-specs {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-    margin-bottom: 32px;
-    padding: 18px 0;
-    border-top: 1px solid var(--dust);
-    border-bottom: 1px solid var(--dust);
-  }
-  .spec-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
-    color: rgba(26,22,18,0.5); margin-bottom: 4px;
-  }
-  .spec-val { font-size: 16px; font-weight: 500; }
-  .modal-bottom {
-    display: flex; align-items: center; justify-content: space-between; gap: 20px;
-  }
-  .modal-price { font-size: 32px; font-weight: 600; color: var(--rust); }
+    .nav-brand-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(26, 22, 18, 0.55);
+      padding-left: 10px;
+      border-left: 1px solid var(--dust);
+      white-space: nowrap;
+    }
 
-  /* BAG / CART DRAWER */
-  .bag-panel {
-    position: fixed; top: 0; right: 0; bottom: 0;
-    width: min(440px, 100%);
-    background: var(--cream);
-    box-shadow: -15px 0 50px rgba(20,17,14,0.18);
-    transform: translateX(110%);
-    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
-    z-index: 1200;
-    display: flex; flex-direction: column;
-    border-left: 1px solid rgba(26,22,18,0.08);
-  }
-  .bag-panel.open { transform: translateX(0); }
-  .bag-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 28px 28px 20px;
-    border-bottom: 1px solid rgba(26,22,18,0.08);
-  }
-  .bag-title {
-    font-family: 'Cinzel', serif;
-    font-size: 20px; letter-spacing: 0.1em;
-  }
-  .bag-close {
-    border: none; background: transparent;
-    font-size: 28px; line-height: 1; cursor: pointer; color: var(--ink);
-  }
-  .bag-body {
-    padding: 24px; overflow-y: auto; flex: 1;
-  }
-  .bag-item {
-    display: grid; grid-template-columns: 74px 1fr auto; gap: 14px;
-    background: #fff; padding: 12px; border-radius: 14px;
-    margin-bottom: 14px;
-    border: 1px solid rgba(26,22,18,0.06);
-    align-items: center;
-  }
-  .bag-thumb {
-    width: 74px; height: 74px; border-radius: 8px; overflow: hidden;
-    background: #14110e;
-  }
-  .bag-thumb img { width: 100%; height: 100%; object-fit: cover; }
-  .bag-item-name { font-size: 18px; font-weight: 500; margin-bottom: 2px; }
-  .bag-item-meta {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: rgba(26,22,18,0.55);
-  }
-  .bag-item-price { font-size: 18px; font-weight: 600; color: var(--rust); }
-  .bag-item-remove {
-    background: transparent; border: none; color: #a13d3d; font-size: 11px;
-    font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.15em; text-transform: uppercase;
-    cursor: pointer; margin-top: 4px; display: inline-block;
-  }
-  .bag-empty {
-    text-align: center; color: rgba(26,22,18,0.55); font-size: 18px; padding-top: 60px;
-  }
-  .bag-footer {
-    padding: 24px; border-top: 1px solid rgba(26,22,18,0.08);
-    background: rgba(255,255,255,0.5);
-  }
-  .bag-total {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 20px; font-size: 22px;
-  }
-  .bag-total strong {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase;
-    color: rgba(26,22,18,0.65);
-  }
-  .checkout-btn {
-    display: block; width: 100%;
-    border: none; background: var(--rust); color: var(--cream);
-    padding: 16px 20px; border-radius: 999px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
-    cursor: pointer; transition: transform 0.2s, background 0.2s;
-    box-shadow: 0 10px 24px rgba(196,98,45,0.25);
-  }
-  .checkout-btn:hover { background: var(--ink); transform: translateY(-1px); }
+    .nav-links {
+      display: flex;
+      gap: clamp(20px, 3vw, 42px);
+      list-style: none;
+      align-items: center;
+    }
 
-  /* CHECKOUT MODAL */
-  .checkout-modal {
-    position: fixed; inset: 0;
-    background: rgba(20,17,14,0.75);
-    display: flex; align-items: center; justify-content: center;
-    padding: 24px;
-    opacity: 0; visibility: hidden;
-    transition: opacity 0.25s ease, visibility 0.25s ease;
-    z-index: 1300;
-  }
-  .checkout-modal.open { opacity: 1; visibility: visible; }
-  .checkout-panel {
-    width: min(900px, 100%);
-    background: var(--cream);
-    border-radius: 24px;
-    box-shadow: 0 35px 80px rgba(0,0,0,0.35);
-    border: 1px solid rgba(26,22,18,0.08);
-    overflow: hidden;
-  }
-  .checkout-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 24px 30px;
-    border-bottom: 1px solid rgba(26,22,18,0.08);
-  }
-  .checkout-title {
-    font-family: 'Cinzel', serif; font-size: 22px;
-  }
-  .checkout-close {
-    border: none; background: rgba(26,22,18,0.06);
-    width: 38px; height: 38px; border-radius: 50%;
-    font-size: 24px; cursor: pointer; color: var(--ink);
-  }
-  .checkout-content {
-    display: grid; grid-template-columns: 1.1fr 0.9fr;
-  }
-  .checkout-form, .checkout-summary { padding: 32px; }
-  .checkout-form { border-right: 1px solid rgba(26,22,18,0.08); }
-  .field-group {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;
-  }
-  .field {
-    display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px;
-  }
-  .field label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: rgba(26,22,18,0.65);
-  }
-  .field input, .field select {
-    border: 1px solid rgba(26,22,18,0.14);
-    background: #fff; border-radius: 10px;
-    height: 48px; padding: 0 16px;
-    font-size: 16px; color: var(--ink);
-    font-family: 'Cormorant Garamond', serif; outline: none;
-  }
-  .field input:focus, .field select:focus { border-color: var(--rust); }
-  .payment-options { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
-  .payment-option {
-    display: flex; align-items: center; gap: 14px;
-    padding: 12px 16px; border: 1px solid rgba(26,22,18,0.12);
-    border-radius: 12px; cursor: pointer; background: #fff;
-  }
-  .payment-label { font-size: 16px; font-weight: 500; }
-  .payment-note { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; color: rgba(26,22,18,0.5); }
-  .summary-box { background: #fff; border-radius: 16px; padding: 24px; border: 1px solid rgba(26,22,18,0.06); }
-  .summary-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 16px; }
-  .summary-total {
-    display: flex; justify-content: space-between; align-items: center;
-    border-top: 1px solid var(--dust); padding-top: 16px; margin-top: 16px;
-    font-size: 22px; font-weight: 600; color: var(--rust);
-  }
-  .purchase-btn {
-    display: block; width: 100%; margin-top: 24px;
-    background: var(--rust); color: #fff; border: none;
-    padding: 16px; border-radius: 999px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
-    cursor: pointer; transition: background 0.2s;
-  }
-  .purchase-btn:hover { background: var(--ink); }
+    .nav-links a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+      opacity: 0.75;
+      transition: opacity 0.3s, color 0.3s;
+      position: relative;
+      padding: 6px 0;
+    }
 
-  /* FOOTER */
-  footer {
-    background: #0f0d0b; color: var(--cream);
-    padding: 90px 56px 40px;
-    border-top: 1px solid rgba(255,255,255,0.06);
-  }
-  .footer-top {
-    display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 48px;
-    margin-bottom: 60px;
-  }
-  .f-logo {
-    font-family: 'Cinzel', serif; font-size: 24px; letter-spacing: 0.16em;
-    margin-bottom: 12px;
-  }
-  .f-logo span { color: var(--rust); }
-  .f-tag { font-size: 16px; font-style: italic; color: rgba(245,240,232,0.65); margin-bottom: 24px; }
-  .f-col h4 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 20px;
-  }
-  .f-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-  .f-col a {
-    color: rgba(245,240,232,0.65); text-decoration: none; font-size: 15px;
-    transition: color 0.25s;
-  }
-  .f-col a:hover { color: #fff; }
-  .footer-bottom {
-    display: flex; justify-content: space-between; align-items: center;
-    border-top: 1px solid rgba(255,255,255,0.08); padding-top: 30px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: rgba(245,240,232,0.45);
-  }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--rust);
+      transition: width 0.3s ease;
+    }
 
-  /* TOAST */
-  .toast {
-    position: fixed; bottom: 32px; right: 32px;
-    background: var(--ink); color: var(--cream);
-    padding: 14px 24px; border-radius: 999px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.1);
-    transform: translateY(100px); opacity: 0;
-    transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), opacity 0.3s;
-    z-index: 2000;
-  }
-  .toast.show { transform: translateY(0); opacity: 1; }
+    .nav-links a:hover {
+      opacity: 1;
+      color: var(--rust);
+    }
 
-  /* RESPONSIVE */
-  @media (max-width: 960px) {
-    nav { padding: 18px 24px; }
-    .nav-links { display: none; }
-    .hero { grid-template-columns: 1fr; padding-top: 60px; }
-    .hero-left { padding: 60px 24px 40px; }
-    .hero-right { padding: 20px 24px 60px; }
-    .featured { padding: 80px 24px; }
-    .featured-header { flex-direction: column; align-items: flex-start; gap: 16px; }
-    .art-grid { grid-template-columns: 1fr; }
-    .art-card:first-child { grid-row: auto; }
-    .about { grid-template-columns: 1fr; }
-    .about-right { padding: 60px 24px; }
-    .coll-grid { grid-template-columns: 1fr; }
-    .process { grid-template-columns: 1fr; padding: 80px 24px; gap: 40px; }
-    .process-sticky { position: static; }
-    .newsletter { grid-template-columns: 1fr; padding: 70px 24px; }
-    .footer-top { grid-template-columns: 1fr 1fr; }
-    .artwork-modal-box { grid-template-columns: 1fr; }
-    .checkout-content { grid-template-columns: 1fr; }
-    .checkout-form { border-right: none; border-bottom: 1px solid var(--dust); }
-  }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
 
-  @media (max-width: 580px) {
-    .footer-top { grid-template-columns: 1fr; }
-    .hero-cta { flex-direction: column; align-items: stretch; }
-    .btn-primary, .btn-ghost { width: 100%; }
-    .stats { flex-wrap: wrap; gap: 24px; }
-  }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-  @media (hover: none) {
-    body { cursor: auto; }
-    .cursor, .cursor-ring { display: none; }
-  }
-</style>
+    .nav-cart {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      background: var(--ink);
+      color: var(--cream);
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s ease, box-shadow 0.3s ease;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(20, 17, 14, 0.14);
+      min-height: 42px;
+      white-space: nowrap;
+    }
+
+    .nav-cart:hover {
+      background: var(--rust);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(196, 98, 45, 0.25);
+    }
+
+    /* Mobile Menu Toggle Button */
+    .nav-toggle {
+      display: none;
+      width: 44px;
+      height: 44px;
+      background: transparent;
+      border: 1px solid rgba(26, 22, 18, 0.15);
+      border-radius: 50%;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 5px;
+      padding: 0;
+      transition: border-color 0.2s, background-color 0.2s;
+      z-index: 102;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: var(--ink);
+      border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .nav-toggle.open span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .nav-toggle.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .nav-toggle.open span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* Mobile Navigation Drawer */
+    .mobile-nav-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(20, 17, 14, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 99;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .mobile-nav-drawer.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-nav-menu {
+      position: absolute;
+      top: var(--nav-height);
+      left: 0;
+      right: 0;
+      background: var(--cream);
+      padding: 24px 32px 36px;
+      border-bottom: 1px solid rgba(26, 22, 18, 0.12);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transform: translateY(-20px);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .mobile-nav-drawer.open .mobile-nav-menu {
+      transform: translateY(0);
+    }
+
+    .mobile-nav-menu a {
+      font-family: 'Cinzel', serif;
+      font-size: 18px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(26, 22, 18, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mobile-nav-menu a span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      color: var(--rust);
+      letter-spacing: 0.2em;
+    }
+
+    /* ================= HERO ================= */
+    .hero {
+      min-height: calc(100vh - var(--nav-height));
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding-top: var(--nav-height);
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      width: 100%;
+      min-height: calc(100vh - var(--nav-height));
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(40px, 6vw, 80px) clamp(20px, 4.5vw, 60px);
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-kicker {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(11px, 1.4vw, 13px);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 22px;
+      opacity: 0;
+      animation: fadeUp 1s 0.2s forwards;
+    }
+
+    .hero-kicker::before {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: var(--rust);
+      flex-shrink: 0;
+    }
+
+    .hero-title {
+      font-size: clamp(42px, 6.2vw, 106px);
+      font-weight: 300;
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      margin-bottom: 28px;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      opacity: 0;
+      animation: fadeUp 1s 0.4s forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--rust);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+    }
+
+    .hero-desc {
+      font-size: clamp(16px, 1.6vw, 18px);
+      font-weight: 300;
+      line-height: 1.75;
+      max-width: 480px;
+      margin-bottom: 40px;
+      color: rgba(26, 22, 18, 0.8);
+      opacity: 0;
+      animation: fadeUp 1s 0.6s forwards;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 1s 0.8s forwards;
+    }
+
+    .btn-primary {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      background: var(--rust);
+      color: var(--cream);
+      border: none;
+      padding: 15px 32px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s ease;
+      border-radius: 999px;
+      box-shadow: 0 12px 26px rgba(196, 98, 45, 0.22);
+      min-height: 48px;
+    }
+
+    .btn-primary:hover {
+      background: var(--ink);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px rgba(20, 17, 14, 0.22);
+    }
+
+    .btn-ghost {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid rgba(26, 22, 18, 0.25);
+      padding: 15px 32px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.3s, transform 0.2s, background 0.3s ease, color 0.3s;
+      border-radius: 999px;
+      min-height: 48px;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--ink);
+      transform: translateY(-2px);
+      background: rgba(26, 22, 18, 0.04);
+    }
+
+    .hero-right {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(24px, 4vw, 40px) clamp(20px, 4vw, 60px);
+    }
+
+    .hero-showcase {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      aspect-ratio: 4/5;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 30px 70px rgba(20, 17, 14, 0.22), 0 0 0 1px rgba(197, 160, 89, 0.2);
+      opacity: 0;
+      animation: scaleIn 1.2s 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      cursor: pointer;
+    }
+
+    .hero-showcase-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero-showcase:hover .hero-showcase-img {
+      transform: scale(1.05);
+    }
+
+    .hero-badge-float {
+      position: absolute;
+      bottom: clamp(14px, 3vw, 24px);
+      left: clamp(14px, 3vw, 24px);
+      right: clamp(14px, 3vw, 24px);
+      background: rgba(20, 17, 14, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      color: var(--cream);
+      padding: clamp(12px, 2.5vw, 18px) clamp(14px, 3vw, 22px);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hero-badge-title {
+      font-size: clamp(16px, 2vw, 19px);
+      font-weight: 400;
+      margin-bottom: 2px;
+    }
+
+    .hero-badge-sub {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+    }
+
+    .hero-badge-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(18px, 2.4vw, 22px);
+      color: #fff;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.92) translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* ================= MARQUEE ================= */
+    .marquee-band {
+      background: var(--ink);
+      color: var(--cream);
+      padding: 16px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .marquee-inner {
+      display: inline-flex;
+      gap: 0;
+      animation: marquee 26s linear infinite;
+      will-change: transform;
+    }
+
+    .marquee-item {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(11px, 1.2vw, 13px);
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      padding: 0 32px;
+      opacity: 0.8;
+    }
+
+    .marquee-dot {
+      color: var(--gold);
+      margin-right: 32px;
+    }
+
+    @keyframes marquee {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* ================= SECTION LABELS ================= */
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 28px;
+      height: 1px;
+      background: var(--rust);
+      flex-shrink: 0;
+    }
+
+    /* ================= FEATURED SECTION ================= */
+    .featured {
+      padding: clamp(60px, 8vw, 120px) clamp(16px, 4.5vw, 56px);
+    }
+
+    .featured-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 28px;
+      margin-bottom: clamp(36px, 5vw, 64px);
+      flex-wrap: wrap;
+    }
+
+    .featured-title {
+      font-size: clamp(34px, 5.2vw, 68px);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      word-break: break-word;
+    }
+
+    .featured-title em {
+      font-style: italic;
+      color: var(--rust);
+    }
+
+    .curatorial-statement {
+      max-width: 480px;
+      font-size: clamp(15px, 1.5vw, 17px);
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(26, 22, 18, 0.75);
+    }
+
+    /* ART GRID: Desktop 3-col, Tablet 2-col, Mobile 1-col */
+    .art-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr 1fr;
+      gap: clamp(16px, 2.5vw, 28px);
+    }
+
+    .art-card {
+      position: relative;
+      cursor: pointer;
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 14px 14px 18px;
+      box-shadow: 0 10px 30px rgba(26, 22, 18, 0.06);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+      border: 1px solid rgba(26, 22, 18, 0.06);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .art-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 45px rgba(26, 22, 18, 0.12);
+    }
+
+    .art-card:first-child {
+      grid-row: span 2;
+    }
+
+    .art-frame {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      aspect-ratio: 4/5;
+      background: #181512;
+      flex-shrink: 0;
+    }
+
+    .art-card:first-child .art-frame {
+      aspect-ratio: unset;
+      flex: 1;
+      min-height: 440px;
+    }
+
+    .art-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .art-card:hover .art-img {
+      transform: scale(1.06);
+    }
+
+    /* Art Actions (Desktop Hover Overlay) */
+    .art-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(20, 17, 14, 0.85) 0%, rgba(20, 17, 14, 0.15) 55%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    .art-card:hover .art-overlay {
+      opacity: 1;
+    }
+
+    .art-actions {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .add-btn {
+      flex: 1;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: var(--rust);
+      border: none;
+      padding: 12px 16px;
+      cursor: pointer;
+      border-radius: 999px;
+      box-shadow: 0 6px 16px rgba(196, 98, 45, 0.3);
+      transition: background 0.25s, transform 0.2s;
+      min-height: 42px;
+    }
+
+    .add-btn:hover {
+      background: #db6e33;
+      transform: scale(1.02);
+    }
+
+    .inspect-btn {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.22);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      padding: 12px 16px;
+      cursor: pointer;
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+      transition: background 0.25s, color 0.25s;
+      min-height: 42px;
+    }
+
+    .inspect-btn:hover {
+      background: #fff;
+      color: var(--ink);
+    }
+
+    /* Mobile Inline Action Row (Visible on touch devices / small screens) */
+    .art-mobile-actions {
+      display: none;
+      margin-top: 14px;
+      gap: 8px;
+    }
+
+    .art-info {
+      padding: 16px 4px 2px;
+    }
+
+    .art-name-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+
+    .art-name {
+      font-size: clamp(19px, 2.2vw, 22px);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+
+    .art-price {
+      font-size: clamp(17px, 2vw, 19px);
+      font-weight: 600;
+      color: var(--rust);
+      font-family: 'Cormorant Garamond', serif;
+      white-space: nowrap;
+    }
+
+    .art-meta {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(26, 22, 18, 0.65);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .art-artist {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* ================= PHILOSOPHY & ABOUT ================= */
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--charcoal);
+      color: var(--cream);
+    }
+
+    .about-left {
+      position: relative;
+      overflow: hidden;
+      min-height: 520px;
+      background-image: url("https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .about-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(20, 17, 14, 0.85) 0%, rgba(20, 17, 14, 0.72) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(32px, 5vw, 64px);
+    }
+
+    .about-quote blockquote {
+      font-size: clamp(22px, 2.8vw, 36px);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--cream);
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .about-quote cite {
+      display: block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-style: normal;
+      margin-top: 24px;
+    }
+
+    .about-right {
+      padding: clamp(48px, 7vw, 100px) clamp(24px, 6vw, 76px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .about-h {
+      font-size: clamp(32px, 4.2vw, 56px);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      margin-bottom: 24px;
+      word-break: break-word;
+    }
+
+    .about-h em {
+      font-style: italic;
+      color: var(--rust);
+    }
+
+    .about-p {
+      font-size: clamp(16px, 1.6vw, 18px);
+      font-weight: 300;
+      line-height: 1.85;
+      color: rgba(245, 240, 232, 0.8);
+      margin-bottom: 18px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: clamp(20px, 4vw, 48px);
+      padding-top: clamp(24px, 4vw, 44px);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      margin-top: 20px;
+    }
+
+    .stat-n {
+      font-size: clamp(36px, 4.5vw, 48px);
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+      display: block;
+      font-family: 'Cinzel', serif;
+    }
+
+    .stat-l {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(245, 240, 232, 0.6);
+      margin-top: 6px;
+    }
+
+    /* ================= COLLECTIONS ================= */
+    .collections {
+      padding: clamp(60px, 8vw, 120px) clamp(16px, 4.5vw, 56px);
+      background: #181411;
+      color: var(--cream);
+    }
+
+    .collections .section-label {
+      color: var(--gold);
+    }
+
+    .collections .section-label::before {
+      background: var(--gold);
+    }
+
+    .coll-title {
+      font-size: clamp(34px, 5.2vw, 68px);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: clamp(36px, 5vw, 60px);
+      word-break: break-word;
+    }
+
+    .coll-title em {
+      font-style: italic;
+      color: var(--rust);
+    }
+
+    .coll-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(16px, 2.5vw, 24px);
+    }
+
+    .coll-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+      aspect-ratio: 3/4;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: transform 0.4s ease, border-color 0.4s ease;
+    }
+
+    .coll-item:hover {
+      transform: translateY(-6px);
+      border-color: var(--gold);
+    }
+
+    .coll-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .coll-item:hover .coll-img {
+      transform: scale(1.08);
+    }
+
+    .coll-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(14, 12, 10, 0.92) 0%, rgba(14, 12, 10, 0.2) 60%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: clamp(20px, 3.5vw, 32px);
+    }
+
+    .coll-name {
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-weight: 400;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+
+    .coll-sub {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    /* ================= PROCESS ================= */
+    .process {
+      padding: clamp(60px, 8vw, 120px) clamp(16px, 4.5vw, 56px);
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: clamp(32px, 6vw, 80px);
+      background: var(--cream);
+    }
+
+    .process-sticky {
+      position: sticky;
+      top: 110px;
+      align-self: start;
+    }
+
+    .process-h {
+      font-size: clamp(34px, 4.8vw, 64px);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      word-break: break-word;
+    }
+
+    .process-h em {
+      font-style: italic;
+      color: var(--rust);
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(28px, 4vw, 42px);
+    }
+
+    .step {
+      display: flex;
+      gap: clamp(16px, 3vw, 32px);
+      padding-bottom: clamp(24px, 3.5vw, 38px);
+      border-bottom: 1px solid var(--dust);
+    }
+
+    .step-n {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(26px, 3vw, 32px);
+      font-weight: 400;
+      color: var(--rust);
+      line-height: 1;
+      min-width: 36px;
+    }
+
+    .step-t {
+      font-size: clamp(20px, 2.2vw, 24px);
+      font-weight: 400;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    .step-d {
+      font-size: clamp(15px, 1.5vw, 17px);
+      font-weight: 300;
+      line-height: 1.75;
+      color: rgba(26, 22, 18, 0.75);
+    }
+
+    /* ================= NEWSLETTER ================= */
+    .newsletter {
+      padding: clamp(60px, 7vw, 100px) clamp(16px, 4.5vw, 56px);
+      background: var(--charcoal);
+      color: var(--cream);
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: clamp(32px, 5vw, 60px);
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .nl-title {
+      font-size: clamp(32px, 4.2vw, 58px);
+      font-weight: 300;
+      line-height: 1.05;
+      word-break: break-word;
+    }
+
+    .nl-title em {
+      font-style: italic;
+      color: var(--rust);
+    }
+
+    .nl-sub {
+      font-size: clamp(15px, 1.5vw, 17px);
+      font-weight: 300;
+      color: rgba(245, 240, 232, 0.75);
+      margin-top: 16px;
+      line-height: 1.7;
+      max-width: 440px;
+    }
+
+    .nl-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .nl-input {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      padding: 15px 24px;
+      color: #fff;
+      font-size: 16px;
+      font-family: 'Cormorant Garamond', serif;
+      outline: none;
+      transition: border-color 0.3s;
+      width: 100%;
+      min-height: 48px;
+    }
+
+    .nl-input:focus {
+      border-color: var(--gold);
+    }
+
+    .nl-btn {
+      background: var(--rust);
+      color: var(--cream);
+      border: none;
+      border-radius: 999px;
+      padding: 15px 32px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      min-height: 48px;
+    }
+
+    .nl-btn:hover {
+      background: #db6e33;
+      transform: translateY(-1px);
+    }
+
+    .nl-fine {
+      font-size: 12px;
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.45);
+      margin-top: 4px;
+    }
+
+    /* ================= FOOTER ================= */
+    footer {
+      background: #0f0d0b;
+      color: var(--cream);
+      padding: clamp(60px, 7vw, 90px) clamp(16px, 4.5vw, 56px) 36px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: clamp(28px, 4vw, 48px);
+      margin-bottom: 50px;
+    }
+
+    .f-logo {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(22px, 2.5vw, 24px);
+      letter-spacing: 0.16em;
+      margin-bottom: 12px;
+    }
+
+    .f-logo span {
+      color: var(--rust);
+    }
+
+    .f-tag {
+      font-size: 16px;
+      font-style: italic;
+      color: rgba(245, 240, 232, 0.65);
+      margin-bottom: 20px;
+    }
+
+    .f-col h4 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 18px;
+    }
+
+    .f-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .f-col a {
+      color: rgba(245, 240, 232, 0.65);
+      text-decoration: none;
+      font-size: 15px;
+      transition: color 0.25s;
+      display: inline-block;
+      padding: 2px 0;
+    }
+
+    .f-col a:hover {
+      color: #fff;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 26px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(245, 240, 232, 0.5);
+    }
+
+    /* ================= TOAST ================= */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--ink);
+      color: var(--cream);
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+      z-index: 2000;
+      max-width: calc(100vw - 48px);
+      text-align: center;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ================= ARTWORK DETAIL MODAL (LIGHTBOX) ================= */
+    .artwork-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(14, 12, 10, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(12px, 3vw, 28px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      z-index: 1400;
+    }
+
+    .artwork-modal.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .artwork-modal-box {
+      width: min(1040px, 96vw);
+      max-height: min(90vh, 90dvh);
+      background: var(--cream);
+      border-radius: 20px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      box-shadow: 0 35px 80px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      position: relative;
+    }
+
+    .artwork-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(26, 22, 18, 0.12);
+      border: none;
+      cursor: pointer;
+      font-size: 24px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: background 0.2s;
+    }
+
+    .artwork-modal-close:hover {
+      background: rgba(26, 22, 18, 0.25);
+    }
+
+    .modal-art-image-wrap {
+      background: #14110e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      min-height: 420px;
+    }
+
+    .modal-art-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .modal-art-details {
+      padding: clamp(24px, 4vw, 44px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .modal-kicker {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 8px;
+    }
+
+    .modal-title {
+      font-size: clamp(26px, 3.2vw, 36px);
+      font-weight: 400;
+      margin-bottom: 4px;
+      line-height: 1.1;
+    }
+
+    .modal-artist {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .modal-quote {
+      font-size: clamp(15px, 1.6vw, 17px);
+      font-style: italic;
+      line-height: 1.7;
+      color: rgba(26, 22, 18, 0.8);
+      margin-bottom: 24px;
+      padding-left: 16px;
+      border-left: 2px solid var(--rust);
+    }
+
+    .modal-specs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding: 16px 0;
+      border-top: 1px solid var(--dust);
+      border-bottom: 1px solid var(--dust);
+    }
+
+    .spec-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(26, 22, 18, 0.55);
+      margin-bottom: 4px;
+    }
+
+    .spec-val {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .modal-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .modal-price {
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: 600;
+      color: var(--rust);
+    }
+
+    /* ================= BAG / CART DRAWER ================= */
+    .bag-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(440px, 100vw);
+      background: var(--cream);
+      box-shadow: -15px 0 50px rgba(20, 17, 14, 0.2);
+      transform: translateX(105%);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1200;
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid rgba(26, 22, 18, 0.08);
+    }
+
+    .bag-panel.open {
+      transform: translateX(0);
+    }
+
+    .bag-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 24px 18px;
+      border-bottom: 1px solid rgba(26, 22, 18, 0.08);
+    }
+
+    .bag-title {
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      letter-spacing: 0.1em;
+    }
+
+    .bag-close {
+      border: none;
+      background: transparent;
+      width: 38px;
+      height: 38px;
+      font-size: 28px;
+      line-height: 1;
+      cursor: pointer;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .bag-close:hover {
+      background: rgba(26, 22, 18, 0.06);
+    }
+
+    .bag-body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .bag-item {
+      display: grid;
+      grid-template-columns: 70px 1fr auto;
+      gap: 14px;
+      background: #fff;
+      padding: 12px;
+      border-radius: 14px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(26, 22, 18, 0.06);
+      align-items: center;
+    }
+
+    .bag-thumb {
+      width: 70px;
+      height: 70px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #14110e;
+    }
+
+    .bag-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .bag-item-name {
+      font-size: 17px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .bag-item-meta {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(26, 22, 18, 0.6);
+    }
+
+    .bag-item-price {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--rust);
+    }
+
+    .bag-item-remove {
+      background: transparent;
+      border: none;
+      color: #a13d3d;
+      font-size: 11px;
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 4px;
+      display: inline-block;
+      padding: 2px 0;
+    }
+
+    .bag-empty {
+      text-align: center;
+      color: rgba(26, 22, 18, 0.55);
+      font-size: 18px;
+      padding-top: 60px;
+    }
+
+    .bag-footer {
+      padding: 24px;
+      border-top: 1px solid rgba(26, 22, 18, 0.08);
+      background: rgba(255, 255, 255, 0.7);
+      padding-bottom: max(24px, env(safe-area-inset-bottom));
+    }
+
+    .bag-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      font-size: 22px;
+    }
+
+    .bag-total strong {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(26, 22, 18, 0.65);
+    }
+
+    .checkout-btn {
+      display: block;
+      width: 100%;
+      border: none;
+      background: var(--rust);
+      color: var(--cream);
+      padding: 15px 20px;
+      border-radius: 999px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+      box-shadow: 0 8px 20px rgba(196, 98, 45, 0.25);
+      min-height: 48px;
+    }
+
+    .checkout-btn:hover {
+      background: var(--ink);
+      transform: translateY(-1px);
+    }
+
+    /* ================= CHECKOUT MODAL ================= */
+    .checkout-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 17, 14, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(12px, 3vw, 24px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+      z-index: 1300;
+    }
+
+    .checkout-modal.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .checkout-panel {
+      width: min(900px, 100%);
+      max-height: min(92vh, 92dvh);
+      background: var(--cream);
+      border-radius: 20px;
+      box-shadow: 0 35px 80px rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(26, 22, 18, 0.08);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .checkout-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px clamp(20px, 3.5vw, 30px);
+      border-bottom: 1px solid rgba(26, 22, 18, 0.08);
+      position: sticky;
+      top: 0;
+      background: var(--cream);
+      z-index: 2;
+    }
+
+    .checkout-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(18px, 2.2vw, 22px);
+    }
+
+    .checkout-close {
+      border: none;
+      background: rgba(26, 22, 18, 0.06);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .checkout-close:hover {
+      background: rgba(26, 22, 18, 0.14);
+    }
+
+    .checkout-content {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+
+    .checkout-form,
+    .checkout-summary {
+      padding: clamp(20px, 3.5vw, 32px);
+    }
+
+    .checkout-form {
+      border-right: 1px solid rgba(26, 22, 18, 0.08);
+    }
+
+    .field-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(26, 22, 18, 0.65);
+    }
+
+    .field input,
+    .field select {
+      border: 1px solid rgba(26, 22, 18, 0.15);
+      background: #fff;
+      border-radius: 10px;
+      height: 46px;
+      padding: 0 14px;
+      font-size: 16px;
+      color: var(--ink);
+      font-family: 'Cormorant Garamond', serif;
+      outline: none;
+      width: 100%;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--rust);
+    }
+
+    .payment-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid rgba(26, 22, 18, 0.12);
+      border-radius: 12px;
+      cursor: pointer;
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+
+    .payment-option:hover {
+      border-color: var(--rust);
+    }
+
+    .payment-label {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .payment-note {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      color: rgba(26, 22, 18, 0.55);
+    }
+
+    .summary-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 22px;
+      border: 1px solid rgba(26, 22, 18, 0.06);
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 15px;
+      gap: 10px;
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--dust);
+      padding-top: 14px;
+      margin-top: 14px;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--rust);
+    }
+
+    .purchase-btn {
+      display: block;
+      width: 100%;
+      margin-top: 20px;
+      background: var(--rust);
+      color: #fff;
+      border: none;
+      padding: 15px;
+      border-radius: 999px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+      min-height: 48px;
+    }
+
+    .purchase-btn:hover {
+      background: var(--ink);
+    }
+
+    /* ================= RESPONSIVE BREAKPOINTS ================= */
+
+    /* Tablets and Smaller Laptops (<= 1024px) */
+    @media (max-width: 1024px) {
+      .nav-links {
+        gap: 20px;
+      }
+
+      .hero-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-left {
+        padding: 40px clamp(20px, 4vw, 40px) 20px;
+      }
+
+      .hero-right {
+        padding: 10px clamp(20px, 4vw, 40px) 40px;
+      }
+
+      .art-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .art-card:first-child {
+        grid-row: auto;
+        grid-column: span 2;
+      }
+
+      .art-card:first-child .art-frame {
+        min-height: 380px;
+        aspect-ratio: 16/9;
+      }
+
+      .about {
+        grid-template-columns: 1fr;
+      }
+
+      .about-left {
+        min-height: 380px;
+      }
+
+      .coll-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .process {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+
+      .process-sticky {
+        position: static;
+      }
+
+      .newsletter {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .artwork-modal-box {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-art-image-wrap {
+        min-height: 260px;
+        max-height: 40vh;
+      }
+
+      .checkout-content {
+        grid-template-columns: 1fr;
+      }
+
+      .checkout-form {
+        border-right: none;
+        border-bottom: 1px solid var(--dust);
+      }
+    }
+
+    /* Medium Tablets & Large Phones (<= 840px) */
+    @media (max-width: 840px) {
+      .nav-links {
+        display: none;
+      }
+
+      .nav-toggle {
+        display: flex;
+      }
+    }
+
+    /* Mobile Phones (<= 640px) */
+    @media (max-width: 640px) {
+      :root {
+        --nav-height: 70px;
+      }
+
+      .nav-brand-tag {
+        display: none;
+      }
+
+      .nav-cart {
+        padding: 8px 14px;
+        font-size: 11px;
+      }
+
+      .hero-title {
+        font-size: clamp(38px, 10vw, 56px);
+        margin-bottom: 20px;
+      }
+
+      .hero-cta {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn-primary,
+      .btn-ghost {
+        width: 100%;
+      }
+
+      .hero-badge-float {
+        position: static;
+        margin-top: 14px;
+        background: var(--card-bg);
+        color: var(--ink);
+        border: 1px solid rgba(26, 22, 18, 0.08);
+      }
+
+      .hero-badge-sub {
+        color: var(--rust);
+      }
+
+      .hero-badge-price {
+        color: var(--ink);
+      }
+
+      .art-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .art-card:first-child {
+        grid-column: auto;
+      }
+
+      .art-card:first-child .art-frame {
+        aspect-ratio: 4/5;
+        min-height: unset;
+      }
+
+      /* On mobile, card actions are directly accessible */
+      .art-overlay {
+        display: none;
+      }
+
+      .art-mobile-actions {
+        display: flex;
+      }
+
+      .coll-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field-group {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+    }
+
+    /* Small Phones (<= 380px) */
+    @media (max-width: 380px) {
+      .nav-inner {
+        padding: 14px 12px;
+      }
+
+      .hero-left,
+      .hero-right {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .featured,
+      .collections,
+      .process,
+      .newsletter,
+      footer {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .hero-title {
+        font-size: 34px;
+      }
+    }
+  </style>
 </head>
+
 <body id="top">
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+  <!-- Desktop Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
-<!-- NAVIGATION -->
-<nav>
-  <div style="display:flex; align-items:center; gap:12px;">
-    <a href="#top" class="nav-logo">Mat<span>i</span>z</a>
-    <span class="nav-brand-tag">Fine Art Atelier</span>
-  </div>
-  <ul class="nav-links">
-    <li><a href="#works">Works</a></li>
-    <li><a href="#collections">Collections</a></li>
-    <li><a href="#about">Philosophy</a></li>
-    <li><a href="#process">Acquisition</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <button type="button" class="nav-cart" id="bagToggle" aria-label="Shopping bag">
-    Bag (<span id="bagCount">0</span>)
-  </button>
-</nav>
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-brand-group">
+        <a href="#top" class="nav-logo">Mat<span>i</span>z</a>
+        <span class="nav-brand-tag">Fine Art Atelier</span>
+      </div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-left">
-    <div class="hero-kicker">Atelier Matiz · Autumn 2026</div>
-    <h1 class="hero-title">Art that<br><em>breathes</em><br>wonder.</h1>
-    <p class="hero-desc">Curated atmospheric masterworks shaped by silence, raw earthen minerals, and intimate human emotion — crafted for spaces where art is felt, not merely observed.</p>
-    <div class="hero-cta">
-      <a href="#works" class="btn-primary">Explore Masterpieces</a>
-      <a href="#collections" class="btn-ghost">View Collections</a>
-    </div>
-  </div>
-  <div class="hero-right">
-    <div class="hero-showcase" onclick="openArtworkModal('The Midnight Awakening')">
-      <img src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=85" alt="The Midnight Awakening" class="hero-showcase-img">
-      <div class="hero-badge-float">
-        <div>
-          <div class="hero-badge-title">The Midnight Awakening</div>
-          <div class="hero-badge-sub">Lucía Vega · Flagship Acquisition</div>
-        </div>
-        <div class="hero-badge-price">€5,400</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- MARQUEE -->
-<div class="marquee-band">
-  <div class="marquee-inner">
-    <span class="marquee-item"><span class="marquee-dot">✦</span>Original Oil Works</span>
-    <span class="marquee-item"><span class="marquee-dot">✦</span>Museum Provenance</span>
-    <span class="marquee-item"><span class="marquee-dot">✦</span>Raw Pigments & Encaustic</span>
-    <span class="marquee-item"><span class="marquee-dot">✦</span>Worldwide White-Glove Shipping</span>
-    <span class="marquee-item"><span class="marquee-dot">✦</span>Private Art Advisory</span>
-    <span class="marquee-item"><span class="marquee-dot">✦</span>Certificates of Authenticity</span>
-    <span class="marquee-item"><span class="marquee-dot">✦</span>Original Oil Works</span>
-    <span class="marquee-item"><span class="marquee-dot">✦</span>Museum Provenance</span>
-    <span class="marquee-item"><span class="marquee-dot">✦</span>Raw Pigments & Encaustic</span>
-    <span class="marquee-item"><span class="marquee-dot">✦</span>Worldwide White-Glove Shipping</span>
-  </div>
-</div>
-
-<!-- FEATURED WORKS -->
-<section class="featured" id="works">
-  <div class="featured-header">
-    <div>
-      <div class="section-label">Curated Portfolio</div>
-      <h2 class="featured-title">Signature <em>Masterpieces</em></h2>
-    </div>
-    <p class="curatorial-statement">Each piece is individually sourced from private studios across Europe, East Asia, and West Africa, chosen for visceral technical mastery and rare poetic depth.</p>
-  </div>
-
-  <div class="art-grid">
-    <!-- Piece 1: Large Featured -->
-    <div class="art-card" onclick="openArtworkModal('The Midnight Awakening')">
-      <div class="art-frame">
-        <img src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=85" alt="The Midnight Awakening" class="art-img" loading="lazy">
-        <div class="art-overlay">
-          <div class="art-actions">
-            <button type="button" class="add-btn" onclick="event.stopPropagation(); addToCart('The Midnight Awakening')">Acquire Piece</button>
-            <button type="button" class="inspect-btn" onclick="event.stopPropagation(); openArtworkModal('The Midnight Awakening')">Examine</button>
-          </div>
-        </div>
-      </div>
-      <div class="art-info">
-        <div class="art-name-row">
-          <p class="art-name">The Midnight Awakening</p>
-          <span class="art-price">€5,400</span>
-        </div>
-        <p class="art-meta">
-          <span class="art-artist">Lucía Vega</span>
-          <span>Oil & Gold Leaf · 150 × 115 cm</span>
-        </p>
-      </div>
-    </div>
-
-    <!-- Piece 2 -->
-    <div class="art-card" onclick="openArtworkModal('Solitude in Umber')">
-      <div class="art-frame">
-        <img src="https://images.unsplash.com/photo-1578925518470-4def7a0f08bb?auto=format&fit=crop&w=1000&q=85" alt="Solitude in Umber" class="art-img" loading="lazy">
-        <div class="art-overlay">
-          <div class="art-actions">
-            <button type="button" class="add-btn" onclick="event.stopPropagation(); addToCart('Solitude in Umber')">Acquire Piece</button>
-            <button type="button" class="inspect-btn" onclick="event.stopPropagation(); openArtworkModal('Solitude in Umber')">Examine</button>
-          </div>
-        </div>
-      </div>
-      <div class="art-info">
-        <div class="art-name-row">
-          <p class="art-name">Solitude in Umber</p>
-          <span class="art-price">€3,800</span>
-        </div>
-        <p class="art-meta">
-          <span class="art-artist">Dakarai Mensah</span>
-          <span>Raw Pigment & Charcoal · 95 × 75 cm</span>
-        </p>
-      </div>
-    </div>
-
-    <!-- Piece 3 -->
-    <div class="art-card" onclick="openArtworkModal('Whispers of the Horizon')">
-      <div class="art-frame">
-        <img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1000&q=85" alt="Whispers of the Horizon" class="art-img" loading="lazy">
-        <div class="art-overlay">
-          <div class="art-actions">
-            <button type="button" class="add-btn" onclick="event.stopPropagation(); addToCart('Whispers of the Horizon')">Acquire Piece</button>
-            <button type="button" class="inspect-btn" onclick="event.stopPropagation(); openArtworkModal('Whispers of the Horizon')">Examine</button>
-          </div>
-        </div>
-      </div>
-      <div class="art-info">
-        <div class="art-name-row">
-          <p class="art-name">Whispers of the Horizon</p>
-          <span class="art-price">€2,900</span>
-        </div>
-        <p class="art-meta">
-          <span class="art-artist">Seo Yeon Park</span>
-          <span>Mineral Wash & Impasto · 80 × 60 cm</span>
-        </p>
-      </div>
-    </div>
-
-    <!-- Piece 4 -->
-    <div class="art-card" onclick="openArtworkModal('Sanctuary of Quiet Earth')">
-      <div class="art-frame">
-        <img src="https://images.unsplash.com/photo-1582561424760-0321d75e81fa?auto=format&fit=crop&w=1000&q=85" alt="Sanctuary of Quiet Earth" class="art-img" loading="lazy">
-        <div class="art-overlay">
-          <div class="art-actions">
-            <button type="button" class="add-btn" onclick="event.stopPropagation(); addToCart('Sanctuary of Quiet Earth')">Acquire Piece</button>
-            <button type="button" class="inspect-btn" onclick="event.stopPropagation(); openArtworkModal('Sanctuary of Quiet Earth')">Examine</button>
-          </div>
-        </div>
-      </div>
-      <div class="art-info">
-        <div class="art-name-row">
-          <p class="art-name">Sanctuary of Quiet Earth</p>
-          <span class="art-price">€4,600</span>
-        </div>
-        <p class="art-meta">
-          <span class="art-artist">Amara Osei</span>
-          <span>Earth Encaustic & Wax · 120 × 90 cm</span>
-        </p>
-      </div>
-    </div>
-
-    <!-- Piece 5 -->
-    <div class="art-card" onclick="openArtworkModal('Vespera — The Unseen Light')">
-      <div class="art-frame">
-        <img src="https://images.unsplash.com/photo-1579783928621-7a13d66a62d1?auto=format&fit=crop&w=1000&q=85" alt="Vespera — The Unseen Light" class="art-img" loading="lazy">
-        <div class="art-overlay">
-          <div class="art-actions">
-            <button type="button" class="add-btn" onclick="event.stopPropagation(); addToCart('Vespera — The Unseen Light')">Acquire Piece</button>
-            <button type="button" class="inspect-btn" onclick="event.stopPropagation(); openArtworkModal('Vespera — The Unseen Light')">Examine</button>
-          </div>
-        </div>
-      </div>
-      <div class="art-info">
-        <div class="art-name-row">
-          <p class="art-name">Vespera — The Unseen Light</p>
-          <span class="art-price">€3,400</span>
-        </div>
-        <p class="art-meta">
-          <span class="art-artist">Mira Hoffmann</span>
-          <span>Oil on Cotton · 85 × 65 cm</span>
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PHILOSOPHY & ABOUT -->
-<section class="about" id="about">
-  <div class="about-left">
-    <div class="about-overlay">
-      <div class="about-quote">
-        <blockquote>
-          "A painting is not an image of an emotion. It is the emotion itself, frozen in pigment, waiting to breathe again."
-          <cite>— Curatorial Manifesto · Matiz</cite>
-        </blockquote>
-      </div>
-    </div>
-  </div>
-  <div class="about-right">
-    <div class="section-label" style="color:var(--gold);">Our Philosophy</div>
-    <h2 class="about-h">Art is never<br><em>decorative.</em><br>It is sanctuary.</h2>
-    <p class="about-p">Matiz was conceived around a fundamental belief: genuine art reorganizes the frequency of a room. It slows down time, inviting stillness and contemplative wonder into our fast-paced modern spaces.</p>
-    <p class="about-p">We bypass mass commercial art houses to work directly with visionary painters whose practice embraces unhurried contemplation, hand-ground minerals, and relentless honesty.</p>
-    <div class="stats">
-      <div><span class="stat-n">180+</span><span class="stat-l">Living Masters</span></div>
-      <div><span class="stat-n">24</span><span class="stat-l">Countries</span></div>
-      <div><span class="stat-n">100%</span><span class="stat-l">Authenticity Verified</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- CURATED COLLECTIONS -->
-<section class="collections" id="collections">
-  <div class="section-label">Atmospheres</div>
-  <h2 class="coll-title">Explore by <em>world</em><br>and emotion.</h2>
-  <div class="coll-grid">
-    <div class="coll-item" onclick="openArtworkModal('Sanctuary of Quiet Earth')">
-      <img src="https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&w=800&q=85" alt="Terroir & Obsidian" class="coll-img" loading="lazy">
-      <div class="coll-overlay">
-        <p class="coll-name">Terroir & Obsidian</p>
-        <p class="coll-sub">Volcanic Earth · Burnt Sienna · 42 Works</p>
-      </div>
-    </div>
-    <div class="coll-item" onclick="openArtworkModal('Whispers of the Horizon')">
-      <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=85" alt="The Midnight Viridian" class="coll-img" loading="lazy">
-      <div class="coll-overlay">
-        <p class="coll-name">The Midnight Viridian</p>
-        <p class="coll-sub">Deep Botanical Mist · Nocturnal Sage · 28 Works</p>
-      </div>
-    </div>
-    <div class="coll-item" onclick="openArtworkModal('Solitude in Umber')">
-      <img src="https://images.unsplash.com/photo-1577083288073-40892c0860a4?auto=format&fit=crop&w=800&q=85" alt="Sacred Relics & Gold" class="coll-img" loading="lazy">
-      <div class="coll-overlay">
-        <p class="coll-name">Sacred Relics & Gold</p>
-        <p class="coll-sub">Chiaroscuro · Gilded Linen · 35 Works</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ACQUISITION PROCESS -->
-<section class="process" id="process">
-  <div class="process-sticky">
-    <div class="section-label">Acquisition Concierge</div>
-    <h2 class="process-h">How to<br><em>collect</em><br>with ease.</h2>
-  </div>
-  <div class="steps">
-    <div class="step">
-      <span class="step-n">I</span>
-      <div>
-        <h3 class="step-t">Discover & Examine</h3>
-        <p class="step-d">Inspect our high-resolution galleries or schedule a 1-on-1 virtual viewing. Our art advisors can mock up any piece directly on photographs of your own interior walls.</p>
-      </div>
-    </div>
-    <div class="step">
-      <span class="step-n">II</span>
-      <div>
-        <h3 class="step-t">Provenance & Certificates</h3>
-        <p class="step-d">Every artwork arrives accompanied by a sealed Certificate of Authenticity signed by the artist, full exhibition catalog history, and archival care guidelines.</p>
-      </div>
-    </div>
-    <div class="step">
-      <span class="step-n">III</span>
-      <div>
-        <h3 class="step-t">Secure Acquisition</h3>
-        <p class="step-d">Transact seamlessly via instant UPI, credit card, or direct gallery wire transfer. Custom instalment arrangements and escrow services are available upon request.</p>
-      </div>
-    </div>
-    <div class="step">
-      <span class="step-n">IV</span>
-      <div>
-        <h3 class="step-t">White-Glove Delivery</h3>
-        <p class="step-d">Shipped inside temperature-monitored, custom-built timber crates with full transit insurance. Dedicated fine art handlers unpack and install across major global cities.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- NEWSLETTER -->
-<section class="newsletter" id="contact">
-  <div>
-    <div class="section-label" style="color:var(--gold);">Collector's Circle</div>
-    <h2 class="nl-title">Private views.<br><em>Before anyone else.</em></h2>
-    <p class="nl-sub">Receive invitation-only previews of new acquisitions, studio journal entries, and private invitations to international art fairs.</p>
-  </div>
-  <div class="nl-form">
-    <input type="text" class="nl-input" id="nameInput" placeholder="Your name">
-    <input type="email" class="nl-input" id="emailInput" placeholder="Your email address">
-    <button type="button" class="nl-btn" id="subscribeBtn">Request Invitation →</button>
-    <p class="nl-fine">Curated communications only. Discretion guaranteed.</p>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-top">
-    <div>
-      <div class="f-logo">Mat<span>i</span>z</div>
-      <p class="f-tag">"Where pigment touches eternity."</p>
-    </div>
-    <div class="f-col">
-      <h4>Galleries</h4>
-      <ul>
-        <li><a href="#works">Signature Works</a></li>
-        <li><a href="#collections">Atmospheres</a></li>
+      <ul class="nav-links">
+        <li><a href="#works">Works</a></li>
+        <li><a href="#collections">Collections</a></li>
         <li><a href="#about">Philosophy</a></li>
-        <li><a href="#process">Advisory</a></li>
+        <li><a href="#process">Acquisition</a></li>
+        <li><a href="#contact">Contact</a></li>
       </ul>
-    </div>
-    <div class="f-col">
-      <h4>Studios</h4>
-      <ul>
-        <li><a href="#">Paris Atelier</a></li>
-        <li><a href="#">Kyoto Sanctuary</a></li>
-        <li><a href="#">Mumbai Studio</a></li>
-        <li><a href="#">Oaxaca Residence</a></li>
-      </ul>
-    </div>
-    <div class="f-col">
-      <h4>Inquiries</h4>
-      <ul>
-        <li><a href="#">advisory@matiz-art.com</a></li>
-        <li><a href="#">Private Viewing Requests</a></li>
-        <li><a href="#">Press & Curatorial</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 Matiz Gallery Atelier. All rights reserved.</span>
-    <span>Curated by Umang · Umang0100/matiz</span>
-  </div>
-</footer>
 
-<!-- ARTWORK DETAIL MODAL (LIGHTBOX) -->
-<div class="artwork-modal" id="artworkModal" aria-modal="true" role="dialog">
-  <div class="artwork-modal-box">
-    <button class="artwork-modal-close" type="button" onclick="closeArtworkModal()" aria-label="Close modal">×</button>
-    <div class="modal-art-image-wrap">
-      <img id="modalArtImg" src="" alt="Artwork detail">
+      <div class="nav-actions">
+        <button type="button" class="nav-cart" id="bagToggle" aria-label="Shopping bag">
+          Bag (<span id="bagCount">0</span>)
+        </button>
+        <button type="button" class="nav-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu"
+          aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </div>
-    <div class="modal-art-details">
-      <div>
-        <div class="modal-kicker">Original Masterpiece</div>
-        <h3 class="modal-title" id="modalArtTitle">Artwork Title</h3>
-        <p class="modal-artist" id="modalArtArtist">Artist Name</p>
-        <p class="modal-quote" id="modalArtQuote">"Curatorial thought..."</p>
-        
-        <div class="modal-specs">
-          <div>
-            <div class="spec-label">Medium</div>
-            <div class="spec-val" id="modalArtMedium">Oil on Linen</div>
+  </nav>
+
+  <!-- MOBILE NAVIGATION DRAWER -->
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div class="mobile-nav-menu">
+      <a href="#works" class="mobile-nav-link">Works <span>01</span></a>
+      <a href="#collections" class="mobile-nav-link">Collections <span>02</span></a>
+      <a href="#about" class="mobile-nav-link">Philosophy <span>03</span></a>
+      <a href="#process" class="mobile-nav-link">Acquisition <span>04</span></a>
+      <a href="#contact" class="mobile-nav-link">Contact <span>05</span></a>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="section-container hero-inner">
+        <div class="hero-left">
+          <div class="hero-kicker">Atelier Matiz · Autumn 2026</div>
+          <h1 class="hero-title">Art that<br><em>breathes</em><br>wonder.</h1>
+          <p class="hero-desc">Curated atmospheric masterworks shaped by silence, raw earthen minerals, and intimate
+            human emotion — crafted for spaces where art is felt, not merely observed.</p>
+          <div class="hero-cta">
+            <a href="#works" class="btn-primary">Explore Masterpieces</a>
+            <a href="#collections" class="btn-ghost">View Collections</a>
           </div>
-          <div>
-            <div class="spec-label">Dimensions</div>
-            <div class="spec-val" id="modalArtDims">150 × 115 cm</div>
-          </div>
-          <div>
-            <div class="spec-label">Year</div>
-            <div class="spec-val" id="modalArtYear">2026</div>
-          </div>
-          <div>
-            <div class="spec-label">Provenance</div>
-            <div class="spec-val">Direct from Artist Studio</div>
+        </div>
+        <div class="hero-right">
+          <div class="hero-showcase" onclick="openArtworkModal('The Midnight Awakening')">
+            <img src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=85"
+              alt="The Midnight Awakening" class="hero-showcase-img">
+            <div class="hero-badge-float">
+              <div>
+                <div class="hero-badge-title">The Midnight Awakening</div>
+                <div class="hero-badge-sub">Lucía Vega · Flagship Acquisition</div>
+              </div>
+              <div class="hero-badge-price">€5,400</div>
+            </div>
           </div>
         </div>
       </div>
-      
-      <div class="modal-bottom">
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee-band">
+      <div class="marquee-inner">
+        <span class="marquee-item"><span class="marquee-dot">✦</span>Original Oil Works</span>
+        <span class="marquee-item"><span class="marquee-dot">✦</span>Museum Provenance</span>
+        <span class="marquee-item"><span class="marquee-dot">✦</span>Raw Pigments & Encaustic</span>
+        <span class="marquee-item"><span class="marquee-dot">✦</span>Worldwide White-Glove Shipping</span>
+        <span class="marquee-item"><span class="marquee-dot">✦</span>Private Art Advisory</span>
+        <span class="marquee-item"><span class="marquee-dot">✦</span>Certificates of Authenticity</span>
+        <span class="marquee-item"><span class="marquee-dot">✦</span>Original Oil Works</span>
+        <span class="marquee-item"><span class="marquee-dot">✦</span>Museum Provenance</span>
+        <span class="marquee-item"><span class="marquee-dot">✦</span>Raw Pigments & Encaustic</span>
+        <span class="marquee-item"><span class="marquee-dot">✦</span>Worldwide White-Glove Shipping</span>
+      </div>
+    </div>
+
+    <!-- FEATURED WORKS -->
+    <section class="featured" id="works">
+      <div class="section-container">
+        <div class="featured-header">
+          <div>
+            <div class="section-label">Curated Portfolio</div>
+            <h2 class="featured-title">Signature <em>Masterpieces</em></h2>
+          </div>
+          <p class="curatorial-statement">Each piece is individually sourced from private studios across Europe, East
+            Asia, and West Africa, chosen for visceral technical mastery and rare poetic depth.</p>
+        </div>
+
+        <div class="art-grid">
+          <!-- Piece 1: Large Featured -->
+          <div class="art-card" onclick="openArtworkModal('The Midnight Awakening')">
+            <div class="art-frame">
+              <img src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=85"
+                alt="The Midnight Awakening" class="art-img" loading="lazy">
+              <div class="art-overlay">
+                <div class="art-actions">
+                  <button type="button" class="add-btn"
+                    onclick="event.stopPropagation(); addToCart('The Midnight Awakening')">Acquire Piece</button>
+                  <button type="button" class="inspect-btn"
+                    onclick="event.stopPropagation(); openArtworkModal('The Midnight Awakening')">Examine</button>
+                </div>
+              </div>
+            </div>
+            <div class="art-info">
+              <div class="art-name-row">
+                <p class="art-name">The Midnight Awakening</p>
+                <span class="art-price">€5,400</span>
+              </div>
+              <p class="art-meta">
+                <span class="art-artist">Lucía Vega</span>
+                <span>Oil & Gold Leaf · 150 × 115 cm</span>
+              </p>
+            </div>
+            <div class="art-mobile-actions">
+              <button type="button" class="add-btn"
+                onclick="event.stopPropagation(); addToCart('The Midnight Awakening')">Acquire</button>
+              <button type="button" class="inspect-btn"
+                onclick="event.stopPropagation(); openArtworkModal('The Midnight Awakening')">Examine</button>
+            </div>
+          </div>
+
+          <!-- Piece 2 -->
+          <div class="art-card" onclick="openArtworkModal('Solitude in Umber')">
+            <div class="art-frame">
+              <img src="https://images.unsplash.com/photo-1578925518470-4def7a0f08bb?auto=format&fit=crop&w=1000&q=85"
+                alt="Solitude in Umber" class="art-img" loading="lazy">
+              <div class="art-overlay">
+                <div class="art-actions">
+                  <button type="button" class="add-btn"
+                    onclick="event.stopPropagation(); addToCart('Solitude in Umber')">Acquire Piece</button>
+                  <button type="button" class="inspect-btn"
+                    onclick="event.stopPropagation(); openArtworkModal('Solitude in Umber')">Examine</button>
+                </div>
+              </div>
+            </div>
+            <div class="art-info">
+              <div class="art-name-row">
+                <p class="art-name">Solitude in Umber</p>
+                <span class="art-price">€3,800</span>
+              </div>
+              <p class="art-meta">
+                <span class="art-artist">Dakarai Mensah</span>
+                <span>Raw Pigment & Charcoal · 95 × 75 cm</span>
+              </p>
+            </div>
+            <div class="art-mobile-actions">
+              <button type="button" class="add-btn"
+                onclick="event.stopPropagation(); addToCart('Solitude in Umber')">Acquire</button>
+              <button type="button" class="inspect-btn"
+                onclick="event.stopPropagation(); openArtworkModal('Solitude in Umber')">Examine</button>
+            </div>
+          </div>
+
+          <!-- Piece 3 -->
+          <div class="art-card" onclick="openArtworkModal('Whispers of the Horizon')">
+            <div class="art-frame">
+              <img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1000&q=85"
+                alt="Whispers of the Horizon" class="art-img" loading="lazy">
+              <div class="art-overlay">
+                <div class="art-actions">
+                  <button type="button" class="add-btn"
+                    onclick="event.stopPropagation(); addToCart('Whispers of the Horizon')">Acquire Piece</button>
+                  <button type="button" class="inspect-btn"
+                    onclick="event.stopPropagation(); openArtworkModal('Whispers of the Horizon')">Examine</button>
+                </div>
+              </div>
+            </div>
+            <div class="art-info">
+              <div class="art-name-row">
+                <p class="art-name">Whispers of the Horizon</p>
+                <span class="art-price">€2,900</span>
+              </div>
+              <p class="art-meta">
+                <span class="art-artist">Seo Yeon Park</span>
+                <span>Mineral Wash & Impasto · 80 × 60 cm</span>
+              </p>
+            </div>
+            <div class="art-mobile-actions">
+              <button type="button" class="add-btn"
+                onclick="event.stopPropagation(); addToCart('Whispers of the Horizon')">Acquire</button>
+              <button type="button" class="inspect-btn"
+                onclick="event.stopPropagation(); openArtworkModal('Whispers of the Horizon')">Examine</button>
+            </div>
+          </div>
+
+          <!-- Piece 4 -->
+          <div class="art-card" onclick="openArtworkModal('Sanctuary of Quiet Earth')">
+            <div class="art-frame">
+              <img src="https://images.unsplash.com/photo-1582561424760-0321d75e81fa?auto=format&fit=crop&w=1000&q=85"
+                alt="Sanctuary of Quiet Earth" class="art-img" loading="lazy">
+              <div class="art-overlay">
+                <div class="art-actions">
+                  <button type="button" class="add-btn"
+                    onclick="event.stopPropagation(); addToCart('Sanctuary of Quiet Earth')">Acquire Piece</button>
+                  <button type="button" class="inspect-btn"
+                    onclick="event.stopPropagation(); openArtworkModal('Sanctuary of Quiet Earth')">Examine</button>
+                </div>
+              </div>
+            </div>
+            <div class="art-info">
+              <div class="art-name-row">
+                <p class="art-name">Sanctuary of Quiet Earth</p>
+                <span class="art-price">€4,600</span>
+              </div>
+              <p class="art-meta">
+                <span class="art-artist">Amara Osei</span>
+                <span>Earth Encaustic & Wax · 120 × 90 cm</span>
+              </p>
+            </div>
+            <div class="art-mobile-actions">
+              <button type="button" class="add-btn"
+                onclick="event.stopPropagation(); addToCart('Sanctuary of Quiet Earth')">Acquire</button>
+              <button type="button" class="inspect-btn"
+                onclick="event.stopPropagation(); openArtworkModal('Sanctuary of Quiet Earth')">Examine</button>
+            </div>
+          </div>
+
+          <!-- Piece 5 -->
+          <div class="art-card" onclick="openArtworkModal('Vespera — The Unseen Light')">
+            <div class="art-frame">
+              <img src="https://images.unsplash.com/photo-1579783928621-7a13d66a62d1?auto=format&fit=crop&w=1000&q=85"
+                alt="Vespera — The Unseen Light" class="art-img" loading="lazy">
+              <div class="art-overlay">
+                <div class="art-actions">
+                  <button type="button" class="add-btn"
+                    onclick="event.stopPropagation(); addToCart('Vespera — The Unseen Light')">Acquire Piece</button>
+                  <button type="button" class="inspect-btn"
+                    onclick="event.stopPropagation(); openArtworkModal('Vespera — The Unseen Light')">Examine</button>
+                </div>
+              </div>
+            </div>
+            <div class="art-info">
+              <div class="art-name-row">
+                <p class="art-name">Vespera — The Unseen Light</p>
+                <span class="art-price">€3,400</span>
+              </div>
+              <p class="art-meta">
+                <span class="art-artist">Mira Hoffmann</span>
+                <span>Oil on Cotton · 85 × 65 cm</span>
+              </p>
+            </div>
+            <div class="art-mobile-actions">
+              <button type="button" class="add-btn"
+                onclick="event.stopPropagation(); addToCart('Vespera — The Unseen Light')">Acquire</button>
+              <button type="button" class="inspect-btn"
+                onclick="event.stopPropagation(); openArtworkModal('Vespera — The Unseen Light')">Examine</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHILOSOPHY & ABOUT -->
+    <section class="about" id="about">
+      <div class="about-left">
+        <div class="about-overlay">
+          <div class="about-quote">
+            <blockquote>
+              "A painting is not an image of an emotion. It is the emotion itself, frozen in pigment, waiting to breathe
+              again."
+              <cite>— Curatorial Manifesto · Matiz</cite>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+      <div class="about-right">
+        <div class="section-label" style="color:var(--gold);">Our Philosophy</div>
+        <h2 class="about-h">Art is never<br><em>decorative.</em><br>It is sanctuary.</h2>
+        <p class="about-p">Matiz was conceived around a fundamental belief: genuine art reorganizes the frequency of a
+          room. It slows down time, inviting stillness and contemplative wonder into our fast-paced modern spaces.</p>
+        <p class="about-p">We bypass mass commercial art houses to work directly with visionary painters whose practice
+          embraces unhurried contemplation, hand-ground minerals, and relentless honesty.</p>
+        <div class="stats">
+          <div><span class="stat-n">180+</span><span class="stat-l">Living Masters</span></div>
+          <div><span class="stat-n">24</span><span class="stat-l">Countries</span></div>
+          <div><span class="stat-n">100%</span><span class="stat-l">Authenticity Verified</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CURATED COLLECTIONS -->
+    <section class="collections" id="collections">
+      <div class="section-container">
+        <div class="section-label">Atmospheres</div>
+        <h2 class="coll-title">Explore by <em>world</em><br>and emotion.</h2>
+        <div class="coll-grid">
+          <div class="coll-item" onclick="openArtworkModal('Sanctuary of Quiet Earth')">
+            <img src="https://images.unsplash.com/photo-1561214115-f2f134cc4912?auto=format&fit=crop&w=800&q=85"
+              alt="Terroir & Obsidian" class="coll-img" loading="lazy">
+            <div class="coll-overlay">
+              <p class="coll-name">Terroir & Obsidian</p>
+              <p class="coll-sub">Volcanic Earth · Burnt Sienna · 42 Works</p>
+            </div>
+          </div>
+          <div class="coll-item" onclick="openArtworkModal('Whispers of the Horizon')">
+            <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=85"
+              alt="The Midnight Viridian" class="coll-img" loading="lazy">
+            <div class="coll-overlay">
+              <p class="coll-name">The Midnight Viridian</p>
+              <p class="coll-sub">Deep Botanical Mist · Nocturnal Sage · 28 Works</p>
+            </div>
+          </div>
+          <div class="coll-item" onclick="openArtworkModal('Solitude in Umber')">
+            <img src="https://images.unsplash.com/photo-1577083288073-40892c0860a4?auto=format&fit=crop&w=800&q=85"
+              alt="Sacred Relics & Gold" class="coll-img" loading="lazy">
+            <div class="coll-overlay">
+              <p class="coll-name">Sacred Relics & Gold</p>
+              <p class="coll-sub">Chiaroscuro · Gilded Linen · 35 Works</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACQUISITION PROCESS -->
+    <section class="process" id="process">
+      <div class="section-container" style="display: contents;">
+        <div class="process-sticky">
+          <div class="section-label">Acquisition Concierge</div>
+          <h2 class="process-h">How to<br><em>collect</em><br>with ease.</h2>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <span class="step-n">I</span>
+            <div>
+              <h3 class="step-t">Discover & Examine</h3>
+              <p class="step-d">Inspect our high-resolution galleries or schedule a 1-on-1 virtual viewing. Our art
+                advisors can mock up any piece directly on photographs of your own interior walls.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-n">II</span>
+            <div>
+              <h3 class="step-t">Provenance & Certificates</h3>
+              <p class="step-d">Every artwork arrives accompanied by a sealed Certificate of Authenticity signed by the
+                artist, full exhibition catalog history, and archival care guidelines.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-n">III</span>
+            <div>
+              <h3 class="step-t">Secure Acquisition</h3>
+              <p class="step-d">Transact seamlessly via instant UPI, credit card, or direct gallery wire transfer.
+                Custom instalment arrangements and escrow services are available upon request.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-n">IV</span>
+            <div>
+              <h3 class="step-t">White-Glove Delivery</h3>
+              <p class="step-d">Shipped inside temperature-monitored, custom-built timber crates with full transit
+                insurance. Dedicated fine art handlers unpack and install across major global cities.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEWSLETTER -->
+    <section class="newsletter" id="contact">
+      <div class="section-container" style="display: contents;">
         <div>
-          <div class="spec-label">Acquisition Price</div>
-          <div class="modal-price" id="modalArtPrice">€0</div>
+          <div class="section-label" style="color:var(--gold);">Collector's Circle</div>
+          <h2 class="nl-title">Private views.<br><em>Before anyone else.</em></h2>
+          <p class="nl-sub">Receive invitation-only previews of new acquisitions, studio journal entries, and private
+            invitations to international art fairs.</p>
         </div>
-        <button type="button" class="btn-primary" id="modalArtAddBtn">Add to Bag</button>
+        <div class="nl-form">
+          <input type="text" class="nl-input" id="nameInput" placeholder="Your name" aria-label="Your name">
+          <input type="email" class="nl-input" id="emailInput" placeholder="Your email address"
+            aria-label="Your email address">
+          <button type="button" class="nl-btn" id="subscribeBtn">Request Invitation →</button>
+          <p class="nl-fine">Curated communications only. Discretion guaranteed.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="section-container">
+      <div class="footer-top">
+        <div>
+          <div class="f-logo">Mat<span>i</span>z</div>
+          <p class="f-tag">"Where pigment touches eternity."</p>
+        </div>
+        <div class="f-col">
+          <h4>Galleries</h4>
+          <ul>
+            <li><a href="#works">Signature Works</a></li>
+            <li><a href="#collections">Atmospheres</a></li>
+            <li><a href="#about">Philosophy</a></li>
+            <li><a href="#process">Advisory</a></li>
+          </ul>
+        </div>
+        <div class="f-col">
+          <h4>Studios</h4>
+          <ul>
+            <li><a href="#">Paris Atelier</a></li>
+            <li><a href="#">Kyoto Sanctuary</a></li>
+            <li><a href="#">Mumbai Studio</a></li>
+            <li><a href="#">Oaxaca Residence</a></li>
+          </ul>
+        </div>
+        <div class="f-col">
+          <h4>Inquiries</h4>
+          <ul>
+            <li><a href="#">advisory@matiz-art.com</a></li>
+            <li><a href="#">Private Viewing Requests</a></li>
+            <li><a href="#">Press & Curatorial</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Matiz Gallery Atelier. All rights reserved.</span>
+        <span>Curated by Umang · Umang0100/matiz</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ARTWORK DETAIL MODAL (LIGHTBOX) -->
+  <div class="artwork-modal" id="artworkModal" aria-modal="true" role="dialog">
+    <div class="artwork-modal-box">
+      <button class="artwork-modal-close" type="button" onclick="closeArtworkModal()"
+        aria-label="Close modal">×</button>
+      <div class="modal-art-image-wrap">
+        <img id="modalArtImg" src="" alt="Artwork detail">
+      </div>
+      <div class="modal-art-details">
+        <div>
+          <div class="modal-kicker">Original Masterpiece</div>
+          <h3 class="modal-title" id="modalArtTitle">Artwork Title</h3>
+          <p class="modal-artist" id="modalArtArtist">Artist Name</p>
+          <p class="modal-quote" id="modalArtQuote">"Curatorial thought..."</p>
+
+          <div class="modal-specs">
+            <div>
+              <div class="spec-label">Medium</div>
+              <div class="spec-val" id="modalArtMedium">Oil on Linen</div>
+            </div>
+            <div>
+              <div class="spec-label">Dimensions</div>
+              <div class="spec-val" id="modalArtDims">150 × 115 cm</div>
+            </div>
+            <div>
+              <div class="spec-label">Year</div>
+              <div class="spec-val" id="modalArtYear">2026</div>
+            </div>
+            <div>
+              <div class="spec-label">Provenance</div>
+              <div class="spec-val">Direct from Artist Studio</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-bottom">
+          <div>
+            <div class="spec-label">Acquisition Price</div>
+            <div class="modal-price" id="modalArtPrice">€0</div>
+          </div>
+          <button type="button" class="btn-primary" id="modalArtAddBtn">Add to Bag</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- SHOPPING BAG PANEL -->
-<aside class="bag-panel" id="bagPanel" aria-label="Shopping bag">
-  <div class="bag-header">
-    <div class="bag-title">Acquisition Bag</div>
-    <button class="bag-close" type="button" id="bagClose" aria-label="Close bag">×</button>
-  </div>
-  <div class="bag-body" id="bagBody">
-    <div class="bag-empty">Your acquisition bag is empty.</div>
-  </div>
-  <div class="bag-footer">
-    <div class="bag-total"><strong>Total</strong> <span id="bagTotal">€0</span></div>
-    <button class="checkout-btn" type="button" id="checkoutBtn">Proceed to Acquisition</button>
-  </div>
-</aside>
-
-<!-- CHECKOUT MODAL -->
-<div class="checkout-modal" id="checkoutModal" aria-modal="true" role="dialog">
-  <div class="checkout-panel">
-    <div class="checkout-header">
-      <div class="checkout-title">Complete Acquisition</div>
-      <button class="checkout-close" type="button" id="checkoutClose" aria-label="Close checkout">×</button>
+  <!-- SHOPPING BAG PANEL -->
+  <aside class="bag-panel" id="bagPanel" aria-label="Shopping bag">
+    <div class="bag-header">
+      <div class="bag-title">Acquisition Bag</div>
+      <button class="bag-close" type="button" id="bagClose" aria-label="Close bag">×</button>
     </div>
-    <div class="checkout-content">
-      <div class="checkout-form">
-        <div class="field-group">
-          <div class="field">
-            <label for="buyerName">Collector Name</label>
-            <input id="buyerName" type="text" placeholder="Your full name">
+    <div class="bag-body" id="bagBody">
+      <div class="bag-empty">Your acquisition bag is empty.</div>
+    </div>
+    <div class="bag-footer">
+      <div class="bag-total"><strong>Total</strong> <span id="bagTotal">€0</span></div>
+      <button class="checkout-btn" type="button" id="checkoutBtn">Proceed to Acquisition</button>
+    </div>
+  </aside>
+
+  <!-- CHECKOUT MODAL -->
+  <div class="checkout-modal" id="checkoutModal" aria-modal="true" role="dialog">
+    <div class="checkout-panel">
+      <div class="checkout-header">
+        <div class="checkout-title">Complete Acquisition</div>
+        <button class="checkout-close" type="button" id="checkoutClose" aria-label="Close checkout">×</button>
+      </div>
+      <div class="checkout-content">
+        <div class="checkout-form">
+          <div class="field-group">
+            <div class="field">
+              <label for="buyerName">Collector Name</label>
+              <input id="buyerName" type="text" placeholder="Your full name" autocomplete="name">
+            </div>
+            <div class="field">
+              <label for="buyerEmail">Email for Provenance Docs</label>
+              <input id="buyerEmail" type="email" placeholder="you@domain.com" autocomplete="email">
+            </div>
+          </div>
+          <div class="field-group">
+            <div class="field">
+              <label for="buyerCountry">Country</label>
+              <select id="buyerCountry">
+                <option>India</option>
+                <option>United States</option>
+                <option>United Kingdom</option>
+                <option>France</option>
+                <option>Germany</option>
+                <option>Japan</option>
+                <option>Switzerland</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="buyerCity">City / Destination</label>
+              <input id="buyerCity" type="text" placeholder="e.g. Mumbai, Paris, New York"
+                autocomplete="address-level2">
+            </div>
           </div>
           <div class="field">
-            <label for="buyerEmail">Email for Provenance Docs</label>
-            <input id="buyerEmail" type="email" placeholder="you@domain.com">
+            <label>Settlement Method</label>
+            <div class="payment-options">
+              <label class="payment-option">
+                <input type="radio" name="payment" value="UPI" checked>
+                <div>
+                  <div class="payment-label">UPI / Instant Transfer</div>
+                  <div class="payment-note">Seamless instant mobile payment</div>
+                </div>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment" value="Card">
+                <div>
+                  <div class="payment-label">Credit / Debit Card</div>
+                  <div class="payment-note">Visa, Mastercard, American Express</div>
+                </div>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment" value="Wire">
+                <div>
+                  <div class="payment-label">Private Bank Wire / Escrow</div>
+                  <div class="payment-note">For fine art acquisitions with insurance</div>
+                </div>
+              </label>
+            </div>
           </div>
         </div>
-        <div class="field-group">
-          <div class="field">
-            <label for="buyerCountry">Country</label>
-            <select id="buyerCountry">
-              <option>India</option>
-              <option>United States</option>
-              <option>United Kingdom</option>
-              <option>France</option>
-              <option>Germany</option>
-              <option>Japan</option>
-              <option>Switzerland</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="buyerCity">City / Destination</label>
-            <input id="buyerCity" type="text" placeholder="e.g. Mumbai, Paris, New York">
-          </div>
-        </div>
-        <div class="field">
-          <label>Settlement Method</label>
-          <div class="payment-options">
-            <label class="payment-option">
-              <input type="radio" name="payment" value="UPI" checked>
-              <div>
-                <div class="payment-label">UPI / Instant Transfer</div>
-                <div class="payment-note">Seamless instant mobile payment</div>
-              </div>
-            </label>
-            <label class="payment-option">
-              <input type="radio" name="payment" value="Card">
-              <div>
-                <div class="payment-label">Credit / Debit Card</div>
-                <div class="payment-note">Visa, Mastercard, American Express</div>
-              </div>
-            </label>
-            <label class="payment-option">
-              <input type="radio" name="payment" value="Wire">
-              <div>
-                <div class="payment-label">Private Bank Wire / Escrow</div>
-                <div class="payment-note">For fine art acquisitions with insurance</div>
-              </div>
-            </label>
+        <div class="checkout-summary">
+          <div class="summary-box">
+            <div class="section-label" style="margin-bottom: 12px;">Acquisition Summary</div>
+            <div id="summaryItems"></div>
+            <div class="summary-total">
+              <span>Total</span>
+              <span id="checkoutTotal">€0</span>
+            </div>
+            <button class="purchase-btn" type="button" id="confirmPurchase">Confirm Acquisition</button>
           </div>
         </div>
       </div>
-      <div class="checkout-summary">
-        <div class="summary-box">
-          <div class="section-label" style="margin-bottom: 12px;">Acquisition Summary</div>
-          <div id="summaryItems"></div>
-          <div class="summary-total">
-            <span>Total</span>
-            <span id="checkoutTotal">€0</span>
-          </div>
-          <button class="purchase-btn" type="button" id="confirmPurchase">Confirm Acquisition</button>
-        </div>
-      </div>
     </div>
   </div>
-</div>
 
-<div class="toast" id="toast" aria-live="polite">Artwork added to bag</div>
+  <div class="toast" id="toast" aria-live="polite">Artwork added to bag</div>
 
-<script>
-  // ART DATABASE WITH DEEP EVOCATIVE ARTWORKS
-  const ARTWORKS = {
-    'The Midnight Awakening': {
-      title: 'The Midnight Awakening',
-      artist: 'Lucía Vega',
-      price: 5400,
-      year: '2026',
-      medium: 'Oil & 24k Gold Leaf on Belgian Linen',
-      dims: '150 × 115 cm',
-      image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=85',
-      quote: 'A hypnotic meditation on crepuscular stillness, where nocturnal oceanic depths clash against glowing mineral embers, reminding us that clarity is forged in shadows.'
-    },
-    'Solitude in Umber': {
-      title: 'Solitude in Umber',
-      artist: 'Dakarai Mensah',
-      price: 3800,
-      year: '2025',
-      medium: 'Raw Ground Pigments & Charcoal on Jute',
-      dims: '95 × 75 cm',
-      image: 'https://images.unsplash.com/photo-1578925518470-4def7a0f08bb?auto=format&fit=crop&w=1000&q=85',
-      quote: 'An austere masterclass in dramatic chiaroscuro. Mensah strips away superficial color to focus on raw texture, silence, and the eternal gravitational pull of ancestral memory.'
-    },
-    'Whispers of the Horizon': {
-      title: 'Whispers of the Horizon',
-      artist: 'Seo Yeon Park',
-      price: 2900,
-      year: '2026',
-      medium: 'Mineral Wash, Encaustic & Impasto',
-      dims: '80 × 60 cm',
-      image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1000&q=85',
-      quote: 'Capturing dynamic atmospheric currents with visceral gestural strokes. A vibrant symphony of cadmium, burnt ochre, and celestial light breaking through tempestuous clouds.'
-    },
-    'Sanctuary of Quiet Earth': {
-      title: 'Sanctuary of Quiet Earth',
-      artist: 'Amara Osei',
-      price: 4600,
-      year: '2025',
-      medium: 'Earth Encaustic, Terracotta & Wax',
-      dims: '120 × 90 cm',
-      image: 'https://images.unsplash.com/photo-1582561424760-0321d75e81fa?auto=format&fit=crop&w=1000&q=85',
-      quote: 'Tactile layers of raw clay, beeswax, and natural ochres creating a topographic contemplation on origin, shelter, and the timeless embrace of the earth.'
-    },
-    'Vespera — The Unseen Light': {
-      title: 'Vespera — The Unseen Light',
-      artist: 'Mira Hoffmann',
-      price: 3400,
-      year: '2025',
-      medium: 'Oil on Textured Cotton Canvas',
-      dims: '85 × 65 cm',
-      image: 'https://images.unsplash.com/photo-1579783928621-7a13d66a62d1?auto=format&fit=crop&w=1000&q=85',
-      quote: 'Subtle transitions between dusk and midnight. Hoffmann paints not physical architecture, but the spiritual space where light gradually surrenders to mystery.'
-    }
-  };
-
-  let cart = [];
-  let currentModalArt = null;
-
-  // DOM Elements
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  const bagCount = document.getElementById('bagCount');
-  const bagPanel = document.getElementById('bagPanel');
-  const bagBody = document.getElementById('bagBody');
-  const bagTotal = document.getElementById('bagTotal');
-  const toast = document.getElementById('toast');
-  const bagToggle = document.getElementById('bagToggle');
-  const bagClose = document.getElementById('bagClose');
-  const checkoutBtn = document.getElementById('checkoutBtn');
-  const checkoutModal = document.getElementById('checkoutModal');
-  const checkoutClose = document.getElementById('checkoutClose');
-  const confirmPurchase = document.getElementById('confirmPurchase');
-  const summaryItems = document.getElementById('summaryItems');
-  const checkoutTotal = document.getElementById('checkoutTotal');
-
-  // Artwork Lightbox Modal
-  const artworkModal = document.getElementById('artworkModal');
-  const modalArtImg = document.getElementById('modalArtImg');
-  const modalArtTitle = document.getElementById('modalArtTitle');
-  const modalArtArtist = document.getElementById('modalArtArtist');
-  const modalArtQuote = document.getElementById('modalArtQuote');
-  const modalArtMedium = document.getElementById('modalArtMedium');
-  const modalArtDims = document.getElementById('modalArtDims');
-  const modalArtYear = document.getElementById('modalArtYear');
-  const modalArtPrice = document.getElementById('modalArtPrice');
-  const modalArtAddBtn = document.getElementById('modalArtAddBtn');
-
-  function showToast(msg) {
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(showToast.timer);
-    showToast.timer = setTimeout(() => toast.classList.remove('show'), 2200);
-  }
-
-  function openArtworkModal(title) {
-    const art = ARTWORKS[title];
-    if (!art) return;
-    currentModalArt = art;
-    modalArtImg.src = art.image;
-    modalArtImg.alt = art.title;
-    modalArtTitle.textContent = art.title;
-    modalArtArtist.textContent = art.artist;
-    modalArtQuote.textContent = `"${art.quote}"`;
-    modalArtMedium.textContent = art.medium;
-    modalArtDims.textContent = art.dims;
-    modalArtYear.textContent = art.year;
-    modalArtPrice.textContent = `€${art.price.toLocaleString()}`;
-    
-    modalArtAddBtn.onclick = () => {
-      addToCart(art.title);
-      closeArtworkModal();
+  <script>
+    // ART DATABASE WITH DEEP EVOCATIVE ARTWORKS
+    const ARTWORKS = {
+      'The Midnight Awakening': {
+        title: 'The Midnight Awakening',
+        artist: 'Lucía Vega',
+        price: 5400,
+        year: '2026',
+        medium: 'Oil & 24k Gold Leaf on Belgian Linen',
+        dims: '150 × 115 cm',
+        image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=85',
+        quote: 'A hypnotic meditation on crepuscular stillness, where nocturnal oceanic depths clash against glowing mineral embers, reminding us that clarity is forged in shadows.'
+      },
+      'Solitude in Umber': {
+        title: 'Solitude in Umber',
+        artist: 'Dakarai Mensah',
+        price: 3800,
+        year: '2025',
+        medium: 'Raw Ground Pigments & Charcoal on Jute',
+        dims: '95 × 75 cm',
+        image: 'https://images.unsplash.com/photo-1578925518470-4def7a0f08bb?auto=format&fit=crop&w=1000&q=85',
+        quote: 'An austere masterclass in dramatic chiaroscuro. Mensah strips away superficial color to focus on raw texture, silence, and the eternal gravitational pull of ancestral memory.'
+      },
+      'Whispers of the Horizon': {
+        title: 'Whispers of the Horizon',
+        artist: 'Seo Yeon Park',
+        price: 2900,
+        year: '2026',
+        medium: 'Mineral Wash, Encaustic & Impasto',
+        dims: '80 × 60 cm',
+        image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1000&q=85',
+        quote: 'Capturing dynamic atmospheric currents with visceral gestural strokes. A vibrant symphony of cadmium, burnt ochre, and celestial light breaking through tempestuous clouds.'
+      },
+      'Sanctuary of Quiet Earth': {
+        title: 'Sanctuary of Quiet Earth',
+        artist: 'Amara Osei',
+        price: 4600,
+        year: '2025',
+        medium: 'Earth Encaustic, Terracotta & Wax',
+        dims: '120 × 90 cm',
+        image: 'https://images.unsplash.com/photo-1582561424760-0321d75e81fa?auto=format&fit=crop&w=1000&q=85',
+        quote: 'Tactile layers of raw clay, beeswax, and natural ochres creating a topographic contemplation on origin, shelter, and the timeless embrace of the earth.'
+      },
+      'Vespera — The Unseen Light': {
+        title: 'Vespera — The Unseen Light',
+        artist: 'Mira Hoffmann',
+        price: 3400,
+        year: '2025',
+        medium: 'Oil on Textured Cotton Canvas',
+        dims: '85 × 65 cm',
+        image: 'https://images.unsplash.com/photo-1579783928621-7a13d66a62d1?auto=format&fit=crop&w=1000&q=85',
+        quote: 'Subtle transitions between dusk and midnight. Hoffmann paints not physical architecture, but the spiritual space where light gradually surrenders to mystery.'
+      }
     };
 
-    artworkModal.classList.add('open');
-  }
+    let cart = [];
+    let currentModalArt = null;
 
-  function closeArtworkModal() {
-    artworkModal.classList.remove('open');
-  }
+    // DOM Elements
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    const bagCount = document.getElementById('bagCount');
+    const bagPanel = document.getElementById('bagPanel');
+    const bagBody = document.getElementById('bagBody');
+    const bagTotal = document.getElementById('bagTotal');
+    const toast = document.getElementById('toast');
+    const bagToggle = document.getElementById('bagToggle');
+    const bagClose = document.getElementById('bagClose');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const checkoutModal = document.getElementById('checkoutModal');
+    const checkoutClose = document.getElementById('checkoutClose');
+    const confirmPurchase = document.getElementById('confirmPurchase');
+    const summaryItems = document.getElementById('summaryItems');
+    const checkoutTotal = document.getElementById('checkoutTotal');
 
-  artworkModal.addEventListener('click', (e) => {
-    if (e.target === artworkModal) closeArtworkModal();
-  });
+    // Mobile navigation elements
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const mobileNavDrawer = document.getElementById('mobileNavDrawer');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
 
-  function addToCart(title) {
-    const art = ARTWORKS[title];
-    if (!art) return;
-    const exists = cart.find(item => item.title === title);
-    if (!exists) {
-      cart.push({ ...art });
-      showToast(`Added "${art.title}" to Bag`);
-    } else {
-      showToast(`"${art.title}" is already in your Bag`);
+    // Artwork Lightbox Modal
+    const artworkModal = document.getElementById('artworkModal');
+    const modalArtImg = document.getElementById('modalArtImg');
+    const modalArtTitle = document.getElementById('modalArtTitle');
+    const modalArtArtist = document.getElementById('modalArtArtist');
+    const modalArtQuote = document.getElementById('modalArtQuote');
+    const modalArtMedium = document.getElementById('modalArtMedium');
+    const modalArtDims = document.getElementById('modalArtDims');
+    const modalArtYear = document.getElementById('modalArtYear');
+    const modalArtPrice = document.getElementById('modalArtPrice');
+    const modalArtAddBtn = document.getElementById('modalArtAddBtn');
+
+    // Toast Notification
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove('show'), 2200);
     }
-    renderBag();
-    bagPanel.classList.add('open');
-  }
 
-  function removeFromCart(title) {
-    cart = cart.filter(item => item.title !== title);
-    renderBag();
-    showToast(`Removed from Bag`);
-  }
-
-  function renderBag() {
-    bagCount.textContent = cart.length;
-    if (!cart.length) {
-      bagBody.innerHTML = '<div class="bag-empty">Your acquisition bag is empty.</div>';
-      bagTotal.textContent = '€0';
-      return;
+    // Mobile Menu Logic
+    function toggleMobileMenu() {
+      const isOpen = mobileNavDrawer.classList.toggle('open');
+      mobileMenuToggle.classList.toggle('open', isOpen);
+      mobileMenuToggle.setAttribute('aria-expanded', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
     }
 
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
-    bagTotal.textContent = `€${total.toLocaleString()}`;
+    function closeMobileMenu() {
+      mobileNavDrawer.classList.remove('open');
+      mobileMenuToggle.classList.remove('open');
+      mobileMenuToggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
 
-    bagBody.innerHTML = cart.map(item => `
+    mobileMenuToggle?.addEventListener('click', toggleMobileMenu);
+    mobileNavDrawer?.addEventListener('click', (e) => {
+      if (e.target === mobileNavDrawer) closeMobileMenu();
+    });
+    mobileNavLinks.forEach(link => {
+      link.addEventListener('click', closeMobileMenu);
+    });
+
+    // Artwork Modal Logic
+    function openArtworkModal(title) {
+      const art = ARTWORKS[title];
+      if (!art) return;
+      currentModalArt = art;
+      modalArtImg.src = art.image;
+      modalArtImg.alt = art.title;
+      modalArtTitle.textContent = art.title;
+      modalArtArtist.textContent = art.artist;
+      modalArtQuote.textContent = `"${art.quote}"`;
+      modalArtMedium.textContent = art.medium;
+      modalArtDims.textContent = art.dims;
+      modalArtYear.textContent = art.year;
+      modalArtPrice.textContent = `€${art.price.toLocaleString()}`;
+
+      modalArtAddBtn.onclick = () => {
+        addToCart(art.title);
+        closeArtworkModal();
+      };
+
+      artworkModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeArtworkModal() {
+      artworkModal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    artworkModal?.addEventListener('click', (e) => {
+      if (e.target === artworkModal) closeArtworkModal();
+    });
+
+    // Cart / Bag Logic
+    function addToCart(title) {
+      const art = ARTWORKS[title];
+      if (!art) return;
+      const exists = cart.find(item => item.title === title);
+      if (!exists) {
+        cart.push({ ...art });
+        showToast(`Added "${art.title}" to Bag`);
+      } else {
+        showToast(`"${art.title}" is already in your Bag`);
+      }
+      renderBag();
+      bagPanel.classList.add('open');
+    }
+
+    function removeFromCart(title) {
+      cart = cart.filter(item => item.title !== title);
+      renderBag();
+      showToast(`Removed from Bag`);
+    }
+
+    function renderBag() {
+      bagCount.textContent = cart.length;
+      if (!cart.length) {
+        bagBody.innerHTML = '<div class="bag-empty">Your acquisition bag is empty.</div>';
+        bagTotal.textContent = '€0';
+        return;
+      }
+
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      bagTotal.textContent = `€${total.toLocaleString()}`;
+
+      bagBody.innerHTML = cart.map(item => `
       <div class="bag-item">
         <div class="bag-thumb">
           <img src="${item.image}" alt="${item.title}">
@@ -1511,79 +2843,102 @@
         <div class="bag-item-price">€${item.price.toLocaleString()}</div>
       </div>
     `).join('');
-  }
-
-  bagToggle.addEventListener('click', () => {
-    bagPanel.classList.toggle('open');
-  });
-  bagClose.addEventListener('click', () => bagPanel.classList.remove('open'));
-
-  checkoutBtn.addEventListener('click', () => {
-    if (!cart.length) {
-      showToast('Please select an artwork first');
-      return;
     }
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
-    checkoutTotal.textContent = `€${total.toLocaleString()}`;
-    summaryItems.innerHTML = cart.map(item => `
+
+    bagToggle?.addEventListener('click', () => {
+      bagPanel.classList.toggle('open');
+    });
+    bagClose?.addEventListener('click', () => bagPanel.classList.remove('open'));
+
+    // Checkout Modal Logic
+    checkoutBtn?.addEventListener('click', () => {
+      if (!cart.length) {
+        showToast('Please select an artwork first');
+        return;
+      }
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      checkoutTotal.textContent = `€${total.toLocaleString()}`;
+      summaryItems.innerHTML = cart.map(item => `
       <div class="summary-item">
         <span>${item.title}</span>
         <strong>€${item.price.toLocaleString()}</strong>
       </div>
     `).join('');
-    bagPanel.classList.remove('open');
-    checkoutModal.classList.add('open');
-  });
+      bagPanel.classList.remove('open');
+      checkoutModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
 
-  checkoutClose.addEventListener('click', () => checkoutModal.classList.remove('open'));
-  checkoutModal.addEventListener('click', (e) => {
-    if (e.target === checkoutModal) checkoutModal.classList.remove('open');
-  });
-
-  confirmPurchase.addEventListener('click', () => {
-    const name = document.getElementById('buyerName').value.trim() || 'Distinguished Collector';
-    const method = document.querySelector('input[name="payment"]:checked')?.value || 'UPI';
-    showToast(`Acquisition request received for ${name} via ${method}`);
-    checkoutModal.classList.remove('open');
-    cart = [];
-    renderBag();
-  });
-
-  // Newsletter
-  document.getElementById('subscribeBtn')?.addEventListener('click', () => {
-    const name = document.getElementById('nameInput').value.trim();
-    const email = document.getElementById('emailInput').value.trim();
-    if (!email) {
-      showToast('Please provide your email address');
-      return;
+    function closeCheckoutModal() {
+      checkoutModal.classList.remove('open');
+      document.body.style.overflow = '';
     }
-    showToast(name ? `Welcome to the Collector Circle, ${name}` : 'Welcome to the Collector Circle');
-    document.getElementById('nameInput').value = '';
-    document.getElementById('emailInput').value = '';
-  });
 
-  // Custom Cursor
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-  (function cursorLoop() {
-    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
-    rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15;
-    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-    requestAnimationFrame(cursorLoop);
-  })();
+    checkoutClose?.addEventListener('click', closeCheckoutModal);
+    checkoutModal?.addEventListener('click', (e) => {
+      if (e.target === checkoutModal) closeCheckoutModal();
+    });
 
-  document.querySelectorAll('a, button, .art-card, .coll-item, .hero-showcase').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor.style.width = '20px'; cursor.style.height = '20px';
-      ring.style.width = '56px'; ring.style.height = '56px';
-      ring.style.borderColor = 'var(--rust)';
+    confirmPurchase?.addEventListener('click', () => {
+      const name = document.getElementById('buyerName').value.trim() || 'Distinguished Collector';
+      const method = document.querySelector('input[name="payment"]:checked')?.value || 'UPI';
+      showToast(`Acquisition request received for ${name} via ${method}`);
+      closeCheckoutModal();
+      cart = [];
+      renderBag();
     });
-    el.addEventListener('mouseleave', () => {
-      cursor.style.width = '10px'; cursor.style.height = '10px';
-      ring.style.width = '38px'; ring.style.height = '38px';
-      ring.style.borderColor = 'var(--gold)';
+
+    // Newsletter
+    document.getElementById('subscribeBtn')?.addEventListener('click', () => {
+      const nameInput = document.getElementById('nameInput');
+      const emailInput = document.getElementById('emailInput');
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      if (!email) {
+        showToast('Please provide your email address');
+        return;
+      }
+      showToast(name ? `Welcome to the Collector Circle, ${name}` : 'Welcome to the Collector Circle');
+      nameInput.value = '';
+      emailInput.value = '';
     });
-  });
-</script>
+
+    // Global Escape Key Listener for Modals
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (artworkModal.classList.contains('open')) closeArtworkModal();
+        if (checkoutModal.classList.contains('open')) closeCheckoutModal();
+        if (bagPanel.classList.contains('open')) bagPanel.classList.remove('open');
+        if (mobileNavDrawer.classList.contains('open')) closeMobileMenu();
+      }
+    });
+
+    // Custom Cursor (Desktop with fine pointer & hover only)
+    const hasFineCursor = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (hasFineCursor && cursor && ring) {
+      let mx = -100, my = -100, rx = -100, ry = -100;
+      document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+      (function cursorLoop() {
+        cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+        rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15;
+        ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+        requestAnimationFrame(cursorLoop);
+      })();
+
+      document.querySelectorAll('a, button, .art-card, .coll-item, .hero-showcase').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          cursor.style.width = '20px'; cursor.style.height = '20px';
+          ring.style.width = '56px'; ring.style.height = '56px';
+          ring.style.borderColor = 'var(--rust)';
+        });
+        el.addEventListener('mouseleave', () => {
+          cursor.style.width = '10px'; cursor.style.height = '10px';
+          ring.style.width = '38px'; ring.style.height = '38px';
+          ring.style.borderColor = 'var(--gold)';
+        });
+      });
+    }
+  </script>
 </body>
+
 </html>
