@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comprehensive Guide: Python Web App to Google Play Store</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    @media print {
+      body { margin: 0; padding: 15mm; font-size: 11pt; color: #111827; }
+      .no-print { display: none !important; }
+      h1, h2, h3 { page-break-after: avoid; }
+      .card, table, pre, .alert { page-break-inside: avoid; }
+      .page-break { page-break-before: always; }
+      a { text-decoration: none; color: inherit; }
+    }
+
+    :root {
+      --primary: #1e1b4b;
+      --primary-accent: #4338ca;
+      --indigo: #6366f1;
+      --emerald: #059669;
+      --amber: #d97706;
+      --rose: #e11d48;
+      --bg-gray: #f8fafc;
+      --border-gray: #e2e8f0;
+      --text-dark: #0f172a;
+      --text-muted: #475569;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      color: var(--text-dark);
+      background: #ffffff;
+      line-height: 1.65;
+      padding: 40px 20px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .hero-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+      color: #ffffff;
+      padding: 40px 32px;
+      border-radius: 20px;
+      margin-bottom: 32px;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.15);
+      position: relative;
+    }
+
+    .badge-top {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.15);
+      color: #e0e7ff;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .hero-header h1 {
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-header p {
+      font-size: 15px;
+      color: #c7d2fe;
+      max-width: 780px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .metric-card {
+      background: var(--bg-gray);
+      border: 1px solid var(--border-gray);
+      border-radius: 14px;
+      padding: 16px 18px;
+      text-align: center;
+    }
+
+    .metric-card .title {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .metric-card .value {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-top: 4px;
+    }
+
+    .alert {
+      padding: 16px 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .alert-critical {
+      background: #fff1f2;
+      border-left: 5px solid var(--rose);
+      color: #881337;
+    }
+
+    .alert-warning {
+      background: #fffbeb;
+      border-left: 5px solid var(--amber);
+      color: #78350f;
+    }
+
+    .alert-success {
+      background: #ecfdf5;
+      border-left: 5px solid var(--emerald);
+      color: #064e3b;
+    }
+
+    .alert-info {
+      background: #eff6ff;
+      border-left: 5px solid var(--indigo);
+      color: #1e3a8a;
+    }
+
+    .alert strong {
+      font-weight: 700;
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin: 40px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border-gray);
+    }
+
+    .step-badge {
+      background: var(--primary-accent);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 24px 0 10px;
+    }
+
+    p, li {
+      font-size: 14.5px;
+      color: #334155;
+      margin-bottom: 10px;
+    }
+
+    ul, ol {
+      padding-left: 22px;
+      margin-bottom: 16px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid var(--border-gray);
+      border-radius: 14px;
+      padding: 22px 24px;
+      margin: 18px 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    code {
+      font-family: 'JetBrains Mono', Consolas, monospace;
+      background: #f1f5f9;
+      color: #312e81;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    pre {
+      font-family: 'JetBrains Mono', Consolas, monospace;
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 16px 20px;
+      border-radius: 12px;
+      overflow-x: auto;
+      margin: 14px 0 18px;
+      font-size: 12.8px;
+      line-height: 1.6;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13.8px;
+    }
+
+    th {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+    }
+
+    th:first-child { border-radius: 10px 0 0 0; }
+    th:last-child { border-radius: 0 10px 0 0; }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-gray);
+    }
+
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .tag-ai { background: #e0e7ff; color: #3730a3; }
+    .tag-user { background: #fef3c7; color: #92400e; }
+    .tag-both { background: #dcfce7; color: #166534; }
+
+    .print-float-btn {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: var(--primary);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 14px 26px;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(30, 27, 75, 0.35);
+      transition: all 0.2s ease;
+      z-index: 9999;
+    }
+
+    .print-float-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 32px rgba(30, 27, 75, 0.45);
+      background: #2e1065;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .checklist-item input {
+      margin-top: 4px;
+      accent-color: var(--primary-accent);
+    }
+  </style>
+</head>
+<body>
+
+  <button class="print-float-btn no-print" onclick="window.print()">🖨️ Save as PDF / Print</button>
+
+  <div class="hero-header">
+    <div class="badge-top">Verified Production Guide (2026 Standards)</div>
+    <h1>Python App → Google Play Store Guide</h1>
+    <p>A rigorous, step-by-step master guide for deploying a Python web application (Flask/Django) as a genuine Android App (.AAB) on the Google Play Store using Google Cloud Run, Bubblewrap (TWA), and Digital Asset Links.</p>
+  </div>
+
+  <div class="summary-grid">
+    <div class="metric-card">
+      <div class="title">Google Play License</div>
+      <div class="value">₹1,800 ($25)</div>
+      <p style="font-size:11px; color:#64748b; margin-top:2px;">One-time fee • Lifetime</p>
+    </div>
+    <div class="metric-card">
+      <div class="title">Server Hosting Cost</div>
+      <div class="value">₹0 / month</div>
+      <p style="font-size:11px; color:#64748b; margin-top:2px;">Google Cloud Run Free Tier</p>
+    </div>
+    <div class="metric-card">
+      <div class="title">Packaging Technology</div>
+      <div class="value">TWA (.AAB)</div>
+      <p style="font-size:11px; color:#64748b; margin-top:2px;">Trusted Web Activity</p>
+    </div>
+    <div class="metric-card">
+      <div class="title">Mandatory Closed Test</div>
+      <div class="value">20 Testers / 14 Days</div>
+      <p style="font-size:11px; color:#64748b; margin-top:2px;">Google Play Policy for New Devs</p>
+    </div>
+  </div>
+
+  <div class="alert alert-critical">
+    <strong>⚠️ CRITICAL CORRECTIONS & MISSING ITEMS FIXED IN THIS VERSION:</strong>
+    <ul style="margin-top:8px; margin-bottom:0;">
+      <li><strong>The 20-Tester Policy:</strong> Since late 2023, personal Google Play Developer accounts CANNOT publish directly to production. You must run a 14-day closed test with at least 20 opted-in testers first.</li>
+      <li><strong>Digital Asset Links (assetlinks.json):</strong> Without domain verification via <code>/.well-known/assetlinks.json</code> with your SHA-256 fingerprint, Chrome displays the browser URL bar inside your app instead of a clean, fullscreen native experience.</li>
+      <li><strong>Production WSGI Server:</strong> Python Flask's development server cannot be deployed to Cloud Run. A production server like <code>gunicorn</code> with dynamic <code>$PORT</code> binding is mandatory.</li>
+      <li><strong>Play App Signing Key:</strong> Google Play replaces your local signing key with its own release key. You must update your server's SHA-256 fingerprint after Play Store upload.</li>
+    </ul>
+  </div>
+
+  <!-- STEP 1 -->
+  <h2><span class="step-badge">1</span> Architecture & Code Preparation in Antigravity / Gemini</h2>
+  <p>To run reliably 24/7 on Google Cloud and comply with Android TWA standards, your Python project must have this exact file structure:</p>
+
+  <pre><code>my-math-app/
+├── app.py                      # Flask or Django app logic
+├── requirements.txt            # Python dependencies (must include gunicorn)
+├── Dockerfile                  # Container instructions for Cloud Run
+├── templates/
+│   └── index.html              # Frontend UI with PWA meta tags & SW script
+├── static/
+│   ├── manifest.json           # Web App Manifest (standalone, theme colors)
+│   ├── sw.js                   # Service Worker (offline cache & network fallback)
+│   ├── icon-192.png            # 192x192 PNG (any maskable)
+│   ├── icon-512.png            # 512x512 PNG (splash screen & Play Store)
+│   └── .well-known/
+│       └── assetlinks.json     # Digital Asset Links for full-screen verification</code></pre>
+
+  <h3>A. Production Python Server (<code>app.py</code> & <code>requirements.txt</code>)</h3>
+  <p>Cloud Run passes a dynamic port via the <code>PORT</code> environment variable. <code>app.py</code> must bind to <code>0.0.0.0</code> and properly route PWA files and assetlinks:</p>
+
+  <pre><code># app.py
+import os
+from flask import Flask, render_template, send_from_directory
+
+app = Flask(__name__, static_folder='static', template_folder='templates')
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+# Essential PWA & Android TWA verification endpoints
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory('static', 'manifest.json', mimetype='application/manifest+json')
+
+@app.route('/sw.js')
+def service_worker():
+    response = send_from_directory('static', 'sw.js', mimetype='application/javascript')
+    response.headers['Service-Worker-Allowed'] = '/'
+    return response
+
+@app.route('/.well-known/assetlinks.json')
+def assetlinks():
+    return send_from_directory('static/.well-known', 'assetlinks.json', mimetype='application/json')
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port)</code></pre>
+
+  <p>Your <code>requirements.txt</code> must include <strong>gunicorn</strong>:</p>
+  <pre><code>Flask==3.0.3
+gunicorn==22.0.0</code></pre>
+
+  <h3>B. Production Dockerfile</h3>
+  <pre><code>FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+# Run Gunicorn binding dynamically to the Cloud Run PORT
+CMD exec gunicorn --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 0 app:app</code></pre>
+
+  <!-- STEP 2 -->
+  <div class="page-break"></div>
+  <h2><span class="step-badge">2</span> Deploy to Google Cloud Run (24/7 Free-Tier Server)</h2>
+  <p>Google Cloud Run hosts your containerized Python app with automatic HTTPS and zero sleeping issues.</p>
+
+  <div class="card">
+    <h3>Prerequisites Checklist (Teacher handles once):</h3>
+    <div class="checklist-item"><input type="checkbox" checked disabled> Google account logged into <a href="https://cloud.google.com" target="_blank">cloud.google.com</a></div>
+    <div class="checklist-item"><input type="checkbox" checked disabled> Free tier activated with ₹25,000 / $300 trial credits</div>
+    <div class="checklist-item"><input type="checkbox" checked disabled> A new Google Cloud project created (e.g. <code>matiz-math-app</code>)</div>
+  </div>
+
+  <p>From the Antigravity terminal, the deployment is executed with one command:</p>
+  <pre><code># 1. Login to Google Cloud
+gcloud auth login
+
+# 2. Select project
+gcloud config set project YOUR_PROJECT_ID
+
+# 3. Deploy container directly from source directory
+gcloud run deploy math-quiz-app \
+  --source . \
+  --region asia-south1 \
+  --allow-unauthenticated</code></pre>
+
+  <div class="alert alert-success">
+    ✅ <strong>Output URL:</strong> Cloud Run provides an instant SSL-secured URL, such as:<br>
+    <code>https://math-quiz-app-xyz123-el.a.run.app</code><br>
+    <em>Ensure this URL loads in your phone browser and works over HTTPS before proceeding.</em>
+  </div>
+
+  <!-- STEP 3 -->
+  <h2><span class="step-badge">3</span> Packaging with Bubblewrap CLI (Generating .AAB)</h2>
+  <p>Bubblewrap is Google's official command-line tool that transforms a PWA into a production-ready Android App Bundle (<code>.aab</code>).</p>
+
+  <h3>A. Software Prerequisites</h3>
+  <ul>
+    <li><strong>Node.js:</strong> v18 or later (already installed)</li>
+    <li><strong>Java Development Kit (JDK):</strong> JDK 17 or 21 (Bubblewrap will offer to download this automatically on first run)</li>
+    <li><strong>Android SDK:</strong> Command-line tools (Bubblewrap can auto-install this into <code>C:\Users\&lt;user&gt;\.bubblewrap</code>)</li>
+  </ul>
+
+  <h3>B. Execution Commands</h3>
+  <pre><code># 1. Install Bubblewrap globally
+npm i -g @bubblewrap/cli
+
+# 2. Initialize project from your live Cloud Run manifest
+bubblewrap init --manifest https://math-quiz-app-xyz123-el.a.run.app/manifest.json</code></pre>
+
+  <div class="card">
+    <h3>Key Prompts Answered During <code>bubblewrap init</code>:</h3>
+    <ul>
+      <li><strong>Application name:</strong> Math Quiz Pro</li>
+      <li><strong>Package ID:</strong> <code>com.yourname.mathquiz</code> (must be unique worldwide on Play Store, like reverse domain)</li>
+      <li><strong>Display Mode:</strong> <code>standalone</code> (ensures no browser UI)</li>
+      <li><strong>Signing Key:</strong> Choose <em>"Create a new keystore"</em> → Provide a secure password and store alias (e.g. <code>android</code>).</li>
+    </ul>
+  </div>
+
+  <div class="alert alert-critical">
+    <strong>🚨 BACKUP YOUR KEYSTORE FILE:</strong><br>
+    Bubblewrap creates <code>android.keystore</code>. If you ever lose this file or its passwords, <strong>Google will permanently prevent you from updating your app</strong>. Back it up to Google Drive or safe storage immediately!
+  </div>
+
+  <pre><code># 3. Build the official release bundle
+bubblewrap build</code></pre>
+
+  <div class="alert alert-success">
+    ✅ <strong>Result:</strong> <code>app-release-bundle.aab</code> is generated in your project directory.
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="page-break"></div>
+  <h2><span class="step-badge">4</span> Digital Asset Links: Removing the Browser URL Bar</h2>
+  <p>To eliminate the browser address bar completely, Google Chrome on Android requires verification that the app creator owns the domain.</p>
+
+  <h3>A. Get your SHA-256 Fingerprint</h3>
+  <pre><code># Extract SHA-256 fingerprint from your keystore using keytool
+keytool -list -v -keystore android.keystore -alias android</code></pre>
+  <p>Copy the line that says <code>SHA256: AA:BB:CC:...:11:22</code>.</p>
+
+  <h3>B. Create <code>assetlinks.json</code></h3>
+  <p>Create <code>static/.well-known/assetlinks.json</code> with the following content:</p>
+  <pre><code>[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.yourname.mathquiz",
+    "sha256_cert_fingerprints": [
+      "AA:BB:CC:DD:EE:FF:00:11:22:33:44:55:66:77:88:99:AA:BB:CC:DD:EE:FF:00:11:22:33:44:55:66:77:88:99"
+    ]
+  }
+}]</code></pre>
+
+  <p>Deploy this update to Cloud Run. Verify that visiting <code>https://your-domain/.well-known/assetlinks.json</code> outputs this exact JSON with content-type <code>application/json</code>.</p>
+
+  <!-- STEP 5 -->
+  <h2><span class="step-badge">5</span> Google Play Console Setup & The 20-Tester Rule</h2>
+
+  <h3>A. Developer Account Creation</h3>
+  <ol>
+    <li>Navigate to <a href="https://play.google.com/console" target="_blank">play.google.com/console</a>.</li>
+    <li>Pay the <strong>₹1,800 ($25)</strong> one-time registration fee.</li>
+    <li>Complete identity verification by uploading a government-issued photo ID (Passport, Aadhaar, PAN, or Driver's License).</li>
+  </ol>
+
+  <h3>B. Mandatory Closed Testing Requirement (New Google Policy)</h3>
+  <div class="alert alert-warning">
+    <strong>📋 Important Testing Rule for All Personal Developer Accounts:</strong><br>
+    Google does not permit direct release to Production for new personal developer accounts. You must complete:
+    <ol style="margin-top:8px; margin-bottom:8px;">
+      <li>Create a <strong>Closed Testing Track</strong> in the Play Console.</li>
+      <li>Upload your <code>app-release-bundle.aab</code> to this track.</li>
+      <li>Recruit <strong>at least 20 testers</strong> (friends, students, teachers, colleagues with Android phones).</li>
+      <li>Add their Gmail addresses to an Email List in Play Console and share the test join link.</li>
+      <li>All 20 testers must remain opted into the test for <strong>14 consecutive days</strong>.</li>
+      <li>After 14 days, you can click <strong>"Apply for Production access"</strong> in the dashboard.</li>
+    </ol>
+  </div>
+
+  <!-- STEP 6 -->
+  <h2><span class="step-badge">6</span> Play Store Assets & Legal Declarations</h2>
+  <p>Google Play requires specific graphic assets and policy questionnaires before publishing:</p>
+
+  <table>
+    <tr>
+      <th>Asset / Form</th>
+      <th>Specification</th>
+      <th>Notes</th>
+    </tr>
+    <tr>
+      <td><strong>App Icon</strong></td>
+      <td>512 x 512 px, 32-bit PNG, max 1MB</td>
+      <td>Must match your PWA icon</td>
+    </tr>
+    <tr>
+      <td><strong>Feature Graphic</strong></td>
+      <td>1024 x 500 px, JPG or PNG</td>
+      <td>Displayed at the top of your Play Store listing</td>
+    </tr>
+    <tr>
+      <td><strong>Phone Screenshots</strong></td>
+      <td>Min 2, Max 8 screenshots (16:9 or 9:16)</td>
+      <td>Real screenshots of your app running on mobile</td>
+    </tr>
+    <tr>
+      <td><strong>Privacy Policy</strong></td>
+      <td>Publicly accessible HTTPS URL</td>
+      <td>Generate free via <a href="https://www.privacypolicyonline.com" target="_blank">privacypolicyonline.com</a></td>
+    </tr>
+    <tr>
+      <td><strong>Data Safety Form</strong></td>
+      <td>Play Console questionnaire</td>
+      <td>Declare if your app collects name, email, analytics, or zero data</td>
+    </tr>
+    <tr>
+      <td><strong>Target Audience</strong></td>
+      <td>Age rating questionnaire</td>
+      <td>If selecting children under 13, stricter COPPA policies apply</td>
+    </tr>
+  </table>
+
+  <!-- STEP 7 -->
+  <div class="page-break"></div>
+  <h2><span class="step-badge">7</span> Google Play App Signing: Final AssetLinks Update</h2>
+  <div class="card">
+    <p>When you upload your <code>.aab</code> to Google Play, Google uses <strong>Play App Signing</strong> to re-sign the final APK sent to user devices. This creates a <strong>new SHA-256 fingerprint</strong>.</p>
+    <ol>
+      <li>In Play Console, navigate to <strong>Release &gt; Setup &gt; App Integrity</strong>.</li>
+      <li>Select the <strong>App Signing</strong> tab.</li>
+      <li>Copy the <strong>"App signing key certificate" SHA-256 fingerprint</strong>.</li>
+      <li>Add this fingerprint to your <code>static/.well-known/assetlinks.json</code> alongside your local key (so both local testing and Play Store versions remain fullscreen):</li>
+    </ol>
+    <pre><code>"sha256_cert_fingerprints": [
+  "LOCAL_KEY_SHA256_HERE",
+  "GOOGLE_PLAY_APP_SIGNING_SHA256_HERE"
+]</code></pre>
+    <p>Deploy this change to Cloud Run. Your installed app from the Play Store will now run completely seamless with <strong>zero browser URL bar</strong>!</p>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <h2>📋 Complete Responsibility & Timeline Summary</h2>
+  <table>
+    <tr>
+      <th>Stage</th>
+      <th>Task</th>
+      <th>Primary Actor</th>
+      <th>Estimated Time</th>
+    </tr>
+    <tr>
+      <td><strong>Phase 1</strong></td>
+      <td>Code Python backend + PWA files + Gunicorn</td>
+      <td><span class="tag tag-ai">Gemini / Antigravity</span></td>
+      <td>1 - 2 hours</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 2</strong></td>
+      <td>Deploy to Google Cloud Run (Free SSL URL)</td>
+      <td><span class="tag tag-ai">Gemini / Antigravity</span></td>
+      <td>15 minutes</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 3</strong></td>
+      <td>Build AAB bundle with Bubblewrap</td>
+      <td><span class="tag tag-ai">Gemini / Antigravity</span></td>
+      <td>15 minutes</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 4</strong></td>
+      <td>Create Play Developer account & ID verify</td>
+      <td><span class="tag tag-user">Your Teacher</span></td>
+      <td>1 - 2 days (Google review)</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 5</strong></td>
+      <td>Store listing, Screenshots & Data Safety</td>
+      <td><span class="tag tag-both">Teacher + Gemini</span></td>
+      <td>1 hour</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 6</strong></td>
+      <td>Closed Testing (20 Testers)</td>
+      <td><span class="tag tag-user">Your Teacher</span></td>
+      <td>14 days mandatory</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 7</strong></td>
+      <td>Production Release on Google Play Store</td>
+      <td><span class="tag tag-user">Google Review</span></td>
+      <td>1 - 4 days</td>
+    </tr>
+  </table>
+
+  <div style="text-align: center; margin-top: 40px; padding: 20px; color: #64748b; font-size: 13px;">
+    Document prepared for Matiz & Teacher Python Projects • Verified for Google Play Console 2026 Developer Policies
+  </div>
+
+</body>
+</html>
